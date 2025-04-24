@@ -5,11 +5,20 @@ local function calculate_chip_requirement(blind_id)
     return get_blind_amount(G.GAME.round_resets.ante) * blind.mult * G.GAME.starting_params.ante_scaling
 end
 
+local function get_blind_info(id)
+    local blind_id = G.GAME.round_resets.blind_choices[id]
+    local blind_state = G.GAME.round_resets.blind_states[id]
+    return {
+        chips = calculate_chip_requirement(blind_id),
+        state = blind_state,
+    }
+end
+
 local function calculate_blinds()
     return {
-        small = calculate_chip_requirement(G.GAME.round_resets.blind_choices.Small),
-        big = calculate_chip_requirement(G.GAME.round_resets.blind_choices.Big),
-        boss = calculate_chip_requirement(G.GAME.round_resets.blind_choices.Boss),
+        small = get_blind_info("Small"),
+        big = get_blind_info("Big"),
+        boss = get_blind_info("Boss"),
     }
 end
 

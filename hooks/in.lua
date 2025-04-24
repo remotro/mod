@@ -1,5 +1,18 @@
 RE.InHooks = {}
 
+local function calculate_chip_requirement(blind_id)
+    local blind = G.P_BLINDS[blind_id]
+    return get_blind_amount(G.GAME.round_resets.ante) * blind.mult * G.GAME.starting_params.ante_scaling
+end
+
+local function calculate_blinds()
+    return {
+        small = calculate_chip_requirement(G.GAME.round_resets.blind_choices.Small),
+        big = calculate_chip_requirement(G.GAME.round_resets.blind_choices.Big),
+        boss = calculate_chip_requirement(G.GAME.round_resets.blind_choices.Boss),
+    }
+end
+
 function RE.InHooks.start_run(bundle, cb)
     if G.STATE ~= G.STATES.MENU then
         cb({
@@ -29,9 +42,16 @@ function RE.InHooks.start_run(bundle, cb)
     G.GAME.viewed_back = back_obj
     G.FUNCS.start_run(e, {stake = bundle["stake"], seed = bundle["seed"], challenge = nil});
 
-    cb({
-        Ok = {}
-    })
+    G.E_MANAGER:add_event(Event({
+        trigger = 'immediate',
+        no_delete = true,
+        func = function()
+            cb({
+                Ok = calculate_blinds()
+            })
+            return true
+        end
+    }))
 end
 
 local function get_e()
@@ -48,7 +68,7 @@ function RE.InHooks.select_blind(bundle, cb)
 
     G.FUNCS.select_blind(get_e())
     cb({
-        Ok = {}
+        Ok = calculate_blinds()
     })
 end
 
@@ -62,6 +82,6 @@ function RE.InHooks.skip_blind(bundle, cb)
 
     G.FUNCS.skip_blind(get_e())
     cb({
-        Ok = {}
+        Ok = calculate_blinds()
     })
 end

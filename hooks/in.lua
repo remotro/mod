@@ -7,11 +7,23 @@ end
 
 local function get_blind_info(id)
     local blind_id = G.GAME.round_resets.blind_choices[id]
+    local chips = calculate_chip_requirement(blind_id)
     local blind_state = G.GAME.round_resets.blind_states[id]
-    return {
-        chips = calculate_chip_requirement(blind_id),
-        state = blind_state,
-    }
+    if id == "Boss" then
+        local kind = blind_id
+        return {
+            kind = kind,
+            chips = chips,
+            state = blind_state
+        }
+    else
+        local tag = G.GAME.round_resets.blind_tags[id]
+        return {
+            chips = chips,
+            state = blind_state,
+            tag = tag
+        }
+    end
 end
 
 local function calculate_blinds()

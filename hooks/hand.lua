@@ -4,24 +4,12 @@ RE.Hand.Protocol = {}
 function RE.Hands.get()
     local hand = G.hand;
     local json_hand = {};
-    for i, v in ipairs(hand) do
-        local edition = "";
-        if card.edition.foil then
-            edition = "e_foil"
-        elseif card.edition.holo then
-            edition = "e_holo"
-        elseif card.edition.polychrome then
-            edition = "e_polychrome"
-        elseif card.edition.negative then
-            edition = "e_negative"
-        else
-            edition = "e_base"
-        end
-        local enhancement = card.ability.name;
-        local card_info = v.base;
-        local rank = card_info.value;
-        local suit = card_info.suit;
-        local seal = card.seal;
+    for i, card in ipairs(hand) do
+        local edition = "e_" .. string.lower(card.edition.type);
+        local enhancement = "m_" .. string.lower(card.ability.name);
+        local rank = card.base.value;
+        local suit = card.base.suit;
+        local seal = string.lower(card.seal) .. "_seal";
         local json = {
             edition = edition,
             enhancement = enhancement,
@@ -32,4 +20,4 @@ function RE.Hands.get()
         table.insert(json_hand, json);
     end
     return json_hand
-end
+end>

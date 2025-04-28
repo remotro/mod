@@ -1,12 +1,24 @@
 local super_game_update = Game.update
 
-function responder(kind)
-	return function (body)
+function result_responder(kind)
+	local result_kind = "result/" .. kind
+	local ok = function (body)
 		RE.Client.respond({
-			kind = kind,
-			body = body
+			kind = result_kind,
+			body = {
+				Ok = body
+			}
 		})
 	end
+	local err = function (message)
+		RE.Client.respond({
+			kind = result_kind,
+			body = {
+				Err = message
+			}
+		})
+	end
+	return ok, err
 end
 
 function Game:update(dt)
@@ -17,11 +29,11 @@ function Game:update(dt)
 		if request then
             sendDebugMessage("Recieved " .. request.kind)
             if request.kind == "main_menu/start_run" then
-				RE.InHooks.start_run(request.body, responder("result/blind_select/info"))
+				RE.Menu.Protocol.start_run(request.body, result_responder("blind_select/info"))
 			elseif request.kind == "blind_select/select" then
-				RE.InHooks.select_blind(request.body, responder("placeholder/result"))
+				RE.Blinds.Protocol.select_blind(request.body, result_responder("hand_select/info"))
 			elseif request.kind == "blind_select/skip" then
-				RE.InHooks.skip_blind(request.body, responder("result/blind_select/info"))
+				RE.Blinds.Protocol.skip_blind(request.body, result_responder("blind_select/info"))
             end
 		end
 	until not request

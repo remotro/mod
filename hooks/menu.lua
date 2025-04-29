@@ -7,14 +7,14 @@ function RE.Menu.Protocol.start_run(request, ok, err)
         return
     end
 
-    back_obj = G.P_CENTERS[bundle["back"]]
+    back_obj = G.P_CENTERS[request["back"]]
     if not back_obj then
-        err("could not find back " .. bundle["back"])
+        err("could not find back " .. request["back"])
         return
     end
 
     if not back_obj.unlocked then
-        err("back " .. bundle["back"] .. " is not unlocked")
+        err("back " .. request["back"] .. " is not unlocked")
         return
     end
 
@@ -22,7 +22,7 @@ function RE.Menu.Protocol.start_run(request, ok, err)
     -- which will populate the viewed deck (back). We must "pretend"
     -- this is the case as well. 
     G.GAME.viewed_back = back_obj
-    G.FUNCS.start_run(e, {stake = bundle["stake"], seed = bundle["seed"], challenge = nil});
+    G.FUNCS.start_run(e, {stake = request["stake"], seed = request["seed"], challenge = nil});
 
     G.E_MANAGER:add_event(Event({
         trigger = 'immediate',

@@ -46,14 +46,21 @@ function RE.Blinds.Protocol.select_blind(request, ok, err)
     end
 
     G.FUNCS.select_blind(get_blind_choice_widget())
-    G.E_MANAGER:add_event(Event({
-        trigger = 'immediate',
-        no_delete = true,
-        func = function()
-            ok(RE.Hand.get())
-            return true
-        end
-    }))
+    function launch() 
+        G.E_MANAGER:add_event(Event({
+            trigger = 'immediate',
+            no_delete = true,
+            func = function()
+                if G.STATE ~= G.STATES.SELECTING_HAND then
+                    launch()
+                    return true
+                end
+                ok({hand = RE.Hand.get()})
+                return true
+            end
+        }))
+    end
+    launch()
 end
 
 function RE.Blinds.Protocol.skip_blind(request, ok, err)

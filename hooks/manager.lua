@@ -38,6 +38,8 @@ function Game:update(dt)
 				RE.Blinds.Protocol.skip_blind(request.body, result_responder("blind_select/info"))
             elseif request.kind == "play/click" then
                 RE.Play.Protocol.click(request.body, result_responder("play/hand"))
+            elseif request.kind == "play/play" then
+                RE.Play.Protocol.play(request.body, result_responder("play/hand"))
             end
 		end
 	until not request

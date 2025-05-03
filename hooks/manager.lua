@@ -40,7 +40,9 @@ function Game:update(dt)
                 RE.Play.Protocol.click(request.body, result_responder("play/hand"))
             elseif request.kind == "play/play" then
                 RE.Play.Protocol.play(request.body, result_responder("play/hand"))
-            end
+			elseif request.kind == "play/discard" then
+				RE.Play.Protocol.discard(request.body, result_responder("play/hand"))
+			end
 		end
 	until not request
 end

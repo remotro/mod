@@ -64,3 +64,25 @@ function RE.Play.Protocol.play(request, ok, err)
     -- Can get away with not including a UI element here since its not used
     G.FUNCS.play_cards_from_highlighted(nil)
 end
+
+function RE.Play.Protocol.discard(request, ok, err)
+    if G.STATE ~= G.STATES.SELECTING_HAND then
+        err("cannot do this action, must be in selecting_hand but in " .. G.STATE)
+        return
+    end
+
+    -- Needs to be some highlighted cards
+    local highlighted_cards = false
+    for _, card in ipairs(G.hand.cards) do
+        if card.highlighted then
+            highlighted_cards = true
+        end
+    end
+    if not highlighted_cards then
+        err("no cards highlighted")
+        return
+    end
+
+    -- Can get away with not including a UI element here since its not used
+    G.FUNCS.discard_cards_from_highlighted(nil)
+end

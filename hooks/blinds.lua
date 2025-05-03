@@ -55,9 +55,12 @@ function RE.Blinds.Protocol.skip_blind(request, ok, err)
     if G.STATE ~= G.STATES.BLIND_SELECT then
         err("cannot do this action, must be in blind_select but in " .. G.STATE)
         return
-    end
-
-    G.FUNCS.skip_blind(get_blind_choice_widget())
+	else if G.GAME.round_resets.blind_states["Boss"] == "Select" then
+		err("Cannot skip Boss Blind")
+		return
+	end
+    
+	G.FUNCS.skip_blind(get_blind_choice_widget())
     RE.Screen.await(G.STATES.BLIND_SELECT, function()
         ok(RE.Blinds.info())
     end)

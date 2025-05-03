@@ -63,6 +63,21 @@ function RE.Play.Protocol.play(request, ok, err)
 
     -- Can get away with not including a UI element here since its not used
     G.FUNCS.play_cards_from_highlighted(nil)
+    function launch() 
+        G.E_MANAGER:add_event(Event({
+            trigger = 'immediate',
+            no_delete = true,
+            func = function()
+                if G.STATE ~= G.STATES.SELECTING_HAND then
+                    launch()
+                    return true
+                end
+                ok(RE.Play.info())
+                return true
+            end
+        }))
+    end
+    launch()
 end
 
 function RE.Play.Protocol.discard(request, ok, err)
@@ -85,4 +100,19 @@ function RE.Play.Protocol.discard(request, ok, err)
 
     -- Can get away with not including a UI element here since its not used
     G.FUNCS.discard_cards_from_highlighted(nil)
+    function launch() 
+        G.E_MANAGER:add_event(Event({
+            trigger = 'immediate',
+            no_delete = true,
+            func = function()
+                if G.STATE ~= G.STATES.SELECTING_HAND then
+                    launch()
+                    return true
+                end
+                ok(RE.Play.info())
+                return true
+            end
+        }))
+    end
+    launch()
 end

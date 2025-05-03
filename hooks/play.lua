@@ -2,7 +2,19 @@ RE.Play = {}
 RE.Play.Protocol = {}
 
 function RE.Play.info()
-    return { hand = RE.Deck.playing_cards(G.hand.cards) }
+    local hand = G.hand.cards
+    local json_hand = {}
+    for i, card in ipairs(hand) do
+        local base_json = RE.Deck.playing_card(card)
+        local json;
+        if card.facing == 'front' then
+            json = { card = base_json, selected = card.highlighted }
+        else
+            json = { card = nil, selected = card.highlighted }
+        end
+        table.insert(json_hand, json)
+    end
+    return { hand = json_hand }
 end
 
 function RE.Play.Protocol.click(request, ok, err)

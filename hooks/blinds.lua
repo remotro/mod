@@ -55,7 +55,7 @@ function RE.Blinds.Protocol.select_blind(request, ok, err)
                     launch()
                     return true
                 end
-                ok({hand = RE.Hand.get()})
+                ok(RE.Play.get_hand())
                 return true
             end
         }))

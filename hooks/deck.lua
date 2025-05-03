@@ -1,10 +1,8 @@
-RE.Hand = {}
-RE.Hand.Protocol = {}
+RE.Deck = {}
 
-function RE.Hand.get()
-    local hand = G.hand.cards;
-    local json_hand = {};
-    for i, card in ipairs(hand) do
+function RE.Deck.playing_cards(cards)
+    local json_cards = {};
+    for i, card in ipairs(cards) do
         local edition = nil;
         if card.edition then
             edition = "e_" .. string.lower(card.edition.type);
@@ -26,7 +24,7 @@ function RE.Hand.get()
             suit = suit,
             seal = seal
         }
-        table.insert(json_hand, json);
+        table.insert(json_cards, json);
     end
-    return json_hand
+    return json_cards
 end

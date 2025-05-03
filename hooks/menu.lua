@@ -28,7 +28,7 @@ function RE.Menu.Protocol.start_run(request, ok, err)
         trigger = 'immediate',
         no_delete = true,
         func = function()
-            ok(RE.Blinds.get_all())
+            ok(RE.Blinds.info())
             return true
         end
     }))

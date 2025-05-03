@@ -1,7 +1,7 @@
 RE.Play = {}
 RE.Play.Protocol = {}
 
-function RE.Play.get_hand()
+function RE.Play.info()
     return { hand = RE.Deck.playing_cards(G.hand.cards) }
 end
 
@@ -27,5 +27,5 @@ function RE.Play.Protocol.click(request, ok, err)
     for _, index in ipairs(indices) do
         hand[index + 1]:click()
     end
-    ok(RE.Play.get_hand())
+    ok(RE.Play.info())
 end

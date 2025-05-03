@@ -27,7 +27,7 @@ function RE.Blinds.get(id)
     end
 end
 
-function RE.Blinds.get_all()
+function RE.Blinds.info()
     return {
         small = RE.Blinds.get("Small"),
         big = RE.Blinds.get("Big"),
@@ -55,7 +55,7 @@ function RE.Blinds.Protocol.select_blind(request, ok, err)
                     launch()
                     return true
                 end
-                ok(RE.Play.get_hand())
+                ok(RE.Play.info())
                 return true
             end
         }))
@@ -74,7 +74,7 @@ function RE.Blinds.Protocol.skip_blind(request, ok, err)
         trigger = 'immediate',
         no_delete = true,
         func = function()
-            ok(RE.Blinds.get_all())
+            ok(RE.Blinds.info())
             return true
         end
     }))

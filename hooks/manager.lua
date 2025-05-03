@@ -28,7 +28,9 @@ function Game:update(dt)
 		local request = RE.Client.request()
 		if request then
             sendDebugMessage("Recieved " .. request.kind)
-            if request.kind == "main_menu/start_run" then
+			if request.kind == "screen/get" then
+				RE.Screen.Protocol.get(result_responder("screen/current"))
+			elseif request.kind == "main_menu/start_run" then
 				RE.Menu.Protocol.start_run(request.body, result_responder("blind_select/info"))
 			elseif request.kind == "blind_select/select" then
 				RE.Blinds.Protocol.select_blind(request.body, result_responder("play/hand"))

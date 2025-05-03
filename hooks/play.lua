@@ -42,6 +42,14 @@ function RE.Play.Protocol.click(request, ok, err)
     ok(RE.Play.info())
 end
 
+local function has_highlighted_cards()
+    for _, card in ipairs(G.hand.cards) do
+        if card.highlighted then
+            return true
+        end
+    end
+end
+
 
 function RE.Play.Protocol.play(request, ok, err)
     if G.STATE ~= G.STATES.SELECTING_HAND then
@@ -50,34 +58,22 @@ function RE.Play.Protocol.play(request, ok, err)
     end
 
     -- Needs to be some highlighted cards
-    local highlighted_cards = false
-    for _, card in ipairs(G.hand.cards) do
-        if card.highlighted then
-            highlighted_cards = true
-        end
-    end
-    if not highlighted_cards then
+    if not has_highlighted_cards() then
         err("no cards highlighted")
         return
     end
 
     -- Can get away with not including a UI element here since its not used
     G.FUNCS.play_cards_from_highlighted(nil)
-    function launch() 
-        G.E_MANAGER:add_event(Event({
-            trigger = 'immediate',
-            no_delete = true,
-            func = function()
-                if G.STATE ~= G.STATES.SELECTING_HAND then
-                    launch()
-                    return true
-                end
-                ok(RE.Play.info())
-                return true
-            end
-        }))
-    end
-    launch()
+    RE.Screen.await({G.STATES.SELECTING_HAND, G.STATES.ROUND_EVAL, G.STATES.GAME_OVER, G.STATES.NEW_ROUND}, function(new_state)
+        if new_state == G.STATES.SELECTING_HAND then
+            ok({Again = RE.Play.info()})
+        elseif new_state == G.STATES.ROUND_EVAL then
+            ok({RoundOver = {}})
+        elseif new_state == G.STATES.GAME_OVER or new_state == G.STATES.NEW_ROUND then
+            ok({GameOver = {}})
+        end
+    end)
 end
 
 function RE.Play.Protocol.discard(request, ok, err)
@@ -87,32 +83,18 @@ function RE.Play.Protocol.discard(request, ok, err)
     end
 
     -- Needs to be some highlighted cards
-    local highlighted_cards = false
-    for _, card in ipairs(G.hand.cards) do
-        if card.highlighted then
-            highlighted_cards = true
-        end
-    end
-    if not highlighted_cards then
+    if not has_highlighted_cards() then
         err("no cards highlighted")
         return
     end
 
     -- Can get away with not including a UI element here since its not used
     G.FUNCS.discard_cards_from_highlighted(nil)
-    function launch() 
-        G.E_MANAGER:add_event(Event({
-            trigger = 'immediate',
-            no_delete = true,
-            func = function()
-                if G.STATE ~= G.STATES.SELECTING_HAND then
-                    launch()
-                    return true
-                end
-                ok(RE.Play.info())
-                return true
-            end
-        }))
-    end
-    launch()
+    RE.Screen.await({G.STATES.SELECTING_HAND, G.STATES.GAME_OVER}, function(new_state)
+        if new_state == G.STATES.SELECTING_HAND then
+            ok({Again = RE.Play.info()})
+        elseif new_state == G.STATES.GAME_OVER then
+            ok({GameOver = {}})
+        end
+    end)
 end

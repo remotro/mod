@@ -46,21 +46,9 @@ function RE.Blinds.Protocol.select_blind(request, ok, err)
     end
 
     G.FUNCS.select_blind(get_blind_choice_widget())
-    function launch() 
-        G.E_MANAGER:add_event(Event({
-            trigger = 'immediate',
-            no_delete = true,
-            func = function()
-                if G.STATE ~= G.STATES.SELECTING_HAND then
-                    launch()
-                    return true
-                end
-                ok(RE.Play.info())
-                return true
-            end
-        }))
-    end
-    launch()
+    RE.Screen.await(G.STATES.SELECTING_HAND, function()
+        ok(RE.Play.info())
+    end)
 end
 
 function RE.Blinds.Protocol.skip_blind(request, ok, err)
@@ -70,12 +58,7 @@ function RE.Blinds.Protocol.skip_blind(request, ok, err)
     end
 
     G.FUNCS.skip_blind(get_blind_choice_widget())
-    G.E_MANAGER:add_event(Event({
-        trigger = 'immediate',
-        no_delete = true,
-        func = function()
-            ok(RE.Blinds.info())
-            return true
-        end
-    }))
+    RE.Screen.await(G.STATES.BLIND_SELECT, function()
+        ok(RE.Blinds.info())
+    end)
 end

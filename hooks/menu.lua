@@ -23,13 +23,7 @@ function RE.Menu.Protocol.start_run(request, ok, err)
     -- this is the case as well. 
     G.GAME.viewed_back = back_obj
     G.FUNCS.start_run(e, {stake = request["stake"], seed = request["seed"], challenge = nil});
-
-    G.E_MANAGER:add_event(Event({
-        trigger = 'immediate',
-        no_delete = true,
-        func = function()
-            ok(RE.Blinds.info())
-            return true
-        end
-    }))
+    RE.Screen.await(G.STATES.BLIND_SELECT, function()
+        ok(RE.Blinds.info())
+    end)
 end

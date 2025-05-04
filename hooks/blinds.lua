@@ -36,7 +36,8 @@ function RE.Blinds.info()
 end
 
 local function get_blind_choice_widget()
-    return G.blind_select.UIRoot.children[1].children[1].config.object:get_UIE_by_ID('select_blind_button')
+	selected = G.GAME.round_resets.blind_states["Small"] == "Select" and 1 or 2
+	return G.blind_select.UIRoot.children[1].children[selected].config.object:get_UIE_by_ID('select_blind_button')
 end
 
 function RE.Blinds.Protocol.select_blind(request, ok, err)

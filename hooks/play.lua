@@ -2,6 +2,7 @@ RE.Play = {}
 RE.Play.Protocol = {}
 
 function RE.Play.info()
+	local chip_req = RE.Blinds.get(G.GAME.blind_on_deck).chips
     local hand = G.hand.cards
     local json_hand = {}
     for i, card in ipairs(hand) do
@@ -14,7 +15,7 @@ function RE.Play.info()
         end
         table.insert(json_hand, json)
     end
-    return { hand = json_hand }
+    return { hand = json_hand, chip_req = chip_req }
 end
 
 function RE.Play.Protocol.click(request, ok, err)

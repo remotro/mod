@@ -2,7 +2,8 @@ RE.Play = {}
 RE.Play.Protocol = {}
 
 function RE.Play.info()
-	local chip_req = RE.Blinds.get(G.GAME.blind_on_deck).chips
+	local blind_info = RE.Blinds.get(G.GAME.blind_on_deck)
+	local chip_req = blind_info.chips
     local hand = G.hand.cards
     local json_hand = {}
     for i, card in ipairs(hand) do

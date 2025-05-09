@@ -36,7 +36,8 @@ function RE.Blinds.info()
 end
 
 local function get_blind_choice_widget()
-	selected = G.GAME.blind_on_deck == "Small" and 1 or 2
+	selected_blind = G.GAME.blind_on_deck
+	selected = selected_blind == "Small" and 1 or selected_blind == "Big" and 2 or 3
 	return G.blind_select.UIRoot.children[1].children[selected].config.object:get_UIE_by_ID('select_blind_button')
 end
 

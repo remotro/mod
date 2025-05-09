@@ -4,9 +4,12 @@ RE.Play.Protocol = {}
 function RE.Play.info()
 	local blind_name = G.GAME.blind_on_deck
 	local blind_info = RE.Blinds.get(blind_name)
+	local blind_status = G.GAME.current_round
+	local hands = blind_status.hands_left
+	local discards = blind_status.discards_left
 	blind_name = blind_name == 'Boss' and blind_info.kind or blind_name
-	local chip_req = blind_info.chips
-	local current_chips = G.GAME.chips
+	local requirement = blind_info.chips
+	local score = G.GAME.chips
     local hand = G.hand.cards
     local json_hand = {}
     for i, card in ipairs(hand) do
@@ -21,9 +24,11 @@ function RE.Play.info()
     end
     return { 
 		hand = json_hand,
-		chip_req = chip_req,
-		current_chips = current_chips,
-		current_blind = blind_name
+		requirement = requirement,
+		score = score,
+		current_blind = blind_name,
+		hands = hands,
+		discards = discards
 	}
 end
 

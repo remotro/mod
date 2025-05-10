@@ -8,8 +8,10 @@ function RE.Play.info()
 	local hands = blind_status.hands_left
 	local discards = blind_status.discards_left
 	blind_name = blind_name == 'Boss' and blind_info.kind or blind_name
+	local money = G.GAME.dollars
 	local requirement = blind_info.chips
 	local score = G.GAME.chips
+
     local hand = G.hand.cards
     local json_hand = {}
     for i, card in ipairs(hand) do
@@ -28,7 +30,8 @@ function RE.Play.info()
 		score = score,
 		current_blind = blind_name,
 		hands = hands,
-		discards = discards
+		discards = discards,
+		money = money
 	}
 end
 
@@ -83,9 +86,9 @@ function RE.Play.Protocol.play(request, ok, err)
     RE.Screen.await({G.STATES.SELECTING_HAND, G.STATES.ROUND_EVAL, G.STATES.GAME_OVER, G.STATES.NEW_ROUND}, function(new_state)
         if new_state == G.STATES.SELECTING_HAND then
             ok({Again = RE.Play.info()})
-        elseif new_state == G.STATES.ROUND_EVAL then
+        elseif new_state == G.STATES.ROUND_EVAL or new_state == G.STATES.NEW_ROUND then
             ok({RoundOver = {}})
-        elseif new_state == G.STATES.GAME_OVER or new_state == G.STATES.NEW_ROUND then
+        elseif new_state == G.STATES.GAME_OVER then
             ok({GameOver = {}})
         end
     end)

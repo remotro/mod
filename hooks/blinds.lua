@@ -6,7 +6,25 @@ local function calculate_chip_requirement(blind_id)
     return get_blind_amount(G.GAME.round_resets.ante) * blind.mult * G.GAME.starting_params.ante_scaling
 end
 
-function RE.Blinds.get(id)
+function RE.Blinds.current()
+    local current_blind_choice = G.GAME.blind_on_deck
+    sendDebugMessage("current_blind_choice: " .. current_blind_choice)
+    if current_blind_choice then
+        sendDebugMessage("current_blind_choice is not nil")
+    else
+        sendDebugMessage("current_blind_choice is nil")
+    end
+    local blind_id = G.GAME.round_resets.blind_choices[current_blind_choice]
+    if current_blind_choice == "Boss" then
+        return { Boss = { chips = calculate_chip_requirement(blind_id) } }
+    else
+        local ret = {}
+        ret[current_blind_choice] = { chips = calculate_chip_requirement(blind_id) }
+        return ret
+    end
+end
+
+function RE.Blinds.choice(id)
     local blind_id = G.GAME.round_resets.blind_choices[id]
     local chips = calculate_chip_requirement(blind_id)
     local blind_state = G.GAME.round_resets.blind_states[id]
@@ -27,11 +45,11 @@ function RE.Blinds.get(id)
     end
 end
 
-function RE.Blinds.info()
+function RE.Blinds.choices()
     return {
-        small = RE.Blinds.get("Small"),
-        big = RE.Blinds.get("Big"),
-        boss = RE.Blinds.get("Boss"),
+        small = RE.Blinds.choice("Small"),
+        big = RE.Blinds.choice("Big"),
+        boss = RE.Blinds.choice("Boss"),
     }
 end
 
@@ -62,6 +80,6 @@ function RE.Blinds.Protocol.skip_blind(request, ok, err)
 	end
 	G.FUNCS.skip_blind(get_blind_choice_widget())
     RE.Screen.await(G.STATES.BLIND_SELECT, function()
-        ok(RE.Blinds.info())
+        ok(RE.Blinds.choices())
     end)
 end

@@ -14,7 +14,7 @@ function RE.Play.info()
         end
         table.insert(json_hand, json)
     end
-    return { hand = json_hand }
+    return { current_blind = RE.Blinds.current(), hand = json_hand }
 end
 
 function RE.Play.Protocol.click(request, ok, err)

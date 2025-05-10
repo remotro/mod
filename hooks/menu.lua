@@ -24,6 +24,6 @@ function RE.Menu.Protocol.start_run(request, ok, err)
     G.GAME.viewed_back = back_obj
     G.FUNCS.start_run(e, {stake = request["stake"], seed = request["seed"], challenge = nil});
     RE.Screen.await(G.STATES.BLIND_SELECT, function()
-        ok(RE.Blinds.info())
+        ok(RE.Blinds.choices())
     end)
 end

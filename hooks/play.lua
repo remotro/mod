@@ -2,10 +2,10 @@ RE.Play = {}
 RE.Play.Protocol = {}
 
 function RE.Play.info()
+    local blind_status = G.GAME.current_round
 	local hands = blind_status.hands_left
 	local discards = blind_status.discards_left
 	local money = G.GAME.dollars
-	local requirement = blind_info.chips
 	local score = G.GAME.chips
 
     local hand = G.hand.cards

@@ -8,6 +8,8 @@ function RE.Screen.Protocol.get(ok, err)
         ok({SelectBlind = RE.Blinds.choices()})
     elseif G.STATE == G.STATES.SELECTING_HAND then
         ok({Play = RE.Play.info()})
+	elseif G.STATE == G.STATES.SHOP then
+		ok({Shop = RE.Shop.info()})
     end
 end
 function RE.Screen.await(states, cb)

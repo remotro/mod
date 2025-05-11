@@ -23,8 +23,8 @@ function RE.Play.Protocol.click(request, ok, err)
         return
     end
 
-    local hand = G.hand.cards;
-    local indices = request.indices;
+    local hand = G.hand.cards
+    local indices = request.indices
     local invalid_indices = {}
     for _, index in ipairs(indices) do
         if index < 0 or index >= #hand then
@@ -42,15 +42,6 @@ function RE.Play.Protocol.click(request, ok, err)
     ok(RE.Play.info())
 end
 
-local function has_highlighted_cards()
-    for _, card in ipairs(G.hand.cards) do
-        if card.highlighted then
-            return true
-        end
-    end
-end
-
-
 function RE.Play.Protocol.play(request, ok, err)
     if G.STATE ~= G.STATES.SELECTING_HAND then
         err("cannot do this action, must be in selecting_hand but in " .. G.STATE)
@@ -58,7 +49,7 @@ function RE.Play.Protocol.play(request, ok, err)
     end
 
     -- Needs to be some highlighted cards
-    if not has_highlighted_cards() then
+    if #G.hand.highlighted <= 0 then
         err("no cards highlighted")
         return
     end
@@ -83,7 +74,7 @@ function RE.Play.Protocol.discard(request, ok, err)
     end
 
     -- Needs to be some highlighted cards
-    if not has_highlighted_cards() then
+    if #G.hand.highlighted <= 0 then
         err("no cards highlighted")
         return
     end

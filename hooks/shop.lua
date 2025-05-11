@@ -41,8 +41,8 @@ function RE.Shop.Protocol.buy_voucher(request, ok, err)
 		err("Cannot do this action, must be in shop but in " .. G.STATE)
 		return
 	end
-	local card = G.shop_jokers.cards[request.index]
-	if (card.config.ref_table.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (card.config.ref_table.cost > 0) then
+	local voucher = G.shop_vouchers.cards[request.index]
+	if (voucher.config.ref_table.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (voucher.config.ref_table.cost > 0) then
 		Err("Not enough money")
 		return
 	end
@@ -53,11 +53,12 @@ function RE.Shop.Protocol.buy_booster(request, ok, err)
 		err("Cannot do this action, must be in shop but in " .. G.STATE)
 		return
 	end
-	local card = G.shop_jokers.cards[request.index]
-	if (card.config.ref_table.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (card.config.ref_table.cost > 0) then
+	local pack = G.shop_booster.cards[request.index]
+	if (pack.config.ref_table.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (pack.config.ref_table.cost > 0) then
 		Err("Not enough money")
 		return
 	end
+	
 end
 
 function RE.Shop.Protocol.reroll(request, ok, err)

@@ -10,7 +10,26 @@ function RE.Shop.Protocol.buy(request, ok, err)
 		err("cannot do this action, must be in shop but in " .. G.STATE)
 		return
 	end
+	if not G.FUNCS.check_for_buy_space(c) then
+		err("Cannot do this action, No space")
+	end
+	if (e.config.ref_table.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (e.config.ref_table.cost > 0) then
+		Err("Not enough money")
+		return
+	end
 end
+
+function RE.Shop.Protocol.buy_and_use(request, ok, err)
+	if G.STATE ~= G.STATES.SHOP then
+		err("Cannot do this action, must be in shop but in " ..G.STATE)
+		return
+	end
+	if e.config.id ~= 'buy_and_use' then
+		err("Cannot do this action, card cannot be used right now")
+		return
+	end
+end
+
 
 function RE.Shop.Protocol.reroll(request, ok, err)
 	if G.STATE ~= G.STATES.SHOP then

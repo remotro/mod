@@ -5,9 +5,9 @@ function RE.Shop.info()
 	return { jokers = G.shop_jokers.cards, vouchers = G.shop_vouchers.cards, boosters = G.Shop_booster.cards }
 end
 
-function RE.Shop.Protocol.buy(request, ok, err)
+function RE.Shop.Protocol.buy_main(request, ok, err)
 	if G.STATE ~= G.STATES.SHOP then
-		err("cannot do this action, must be in shop but in " .. G.STATE)
+		err("Cannot do this action, must be in shop but in " .. G.STATE)
 		return
 	end
 	if not G.FUNCS.check_for_buy_space(c) then
@@ -15,6 +15,20 @@ function RE.Shop.Protocol.buy(request, ok, err)
 	end
 	if (e.config.ref_table.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (e.config.ref_table.cost > 0) then
 		Err("Not enough money")
+		return
+	end
+end
+
+function RE.Shop.Protocol.buy_voucher(request, ok, err)
+	if G.STATE ~= G.STATES.SHOP then
+		err("Cannot do this action, must be in shop but in " .. G.STATE)
+		return
+	end
+end
+
+function RE.Shop.Protocol.buy_booster(request, ok, err)
+	if G.STATE ~= G.STATES.SHOP then
+		err("Cannot do this action, must be in shop but in " .. G.STATE)
 		return
 	end
 end

@@ -79,6 +79,12 @@ function RE.Play.Protocol.discard(request, ok, err)
         return
     end
 
+	-- Needs to have discards remaining
+	if G.GAME.current_round.discards_left <= 0 then
+		err("No Discards left")
+		return
+	end
+
     -- Can get away with not including a UI element here since its not used
     G.FUNCS.discard_cards_from_highlighted(nil)
     RE.Screen.await({G.STATES.SELECTING_HAND, G.STATES.GAME_OVER}, function(new_state)

@@ -8,12 +8,6 @@ end
 
 function RE.Blinds.current()
     local current_blind_choice = G.GAME.blind_on_deck
-    sendDebugMessage("current_blind_choice: " .. current_blind_choice)
-    if current_blind_choice then
-        sendDebugMessage("current_blind_choice is not nil")
-    else
-        sendDebugMessage("current_blind_choice is nil")
-    end
     local blind_id = G.GAME.round_resets.blind_choices[current_blind_choice]
     if current_blind_choice == "Boss" then
         return { Boss = { chips = calculate_chip_requirement(blind_id) } }

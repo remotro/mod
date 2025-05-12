@@ -18,6 +18,7 @@ function RE.Shop.Protocol.buy_main(request, ok, err)
 		Err("Not enough money")
 		return
 	end
+	G.FUNCS.buy_from_shop(card)
 end
 
 function RE.Shop.Protocol.buy_and_use(request, ok, err)
@@ -26,14 +27,12 @@ function RE.Shop.Protocol.buy_and_use(request, ok, err)
 		return
 	end
 	local card = G.shop_jokers.cards[request.index]
-	if card.config.id ~= 'buy_and_use' then
-		err("Cannot do this action, card cannot be used right now")
-		return
-	end
+	card.config.id = 'buy_and_use'
 	if (card.config.ref_table.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (card.config.ref_table.cost > 0) then
 		Err("Not enough money")
 		return
 	end
+	G.FUNCS.buy_from_shop(card)
 end
 
 function RE.Shop.Protocol.buy_voucher(request, ok, err)
@@ -46,6 +45,7 @@ function RE.Shop.Protocol.buy_voucher(request, ok, err)
 		Err("Not enough money")
 		return
 	end
+
 end
 
 function RE.Shop.Protocol.buy_booster(request, ok, err)

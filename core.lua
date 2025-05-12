@@ -27,6 +27,7 @@ RE.load_re_file("hooks/menu.lua")
 RE.load_re_file("hooks/play.lua")
 RE.load_re_file("hooks/blinds.lua")
 RE.load_re_file("hooks/screen.lua")
+RE.load_re_file("hooks/shop.lua")
 RE.load_re_file("hooks/manager.lua")
 
 RE.Client.connect()

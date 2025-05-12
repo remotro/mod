@@ -45,7 +45,7 @@ function RE.Shop.Protocol.buy_voucher(request, ok, err)
 		Err("Not enough money")
 		return
 	end
-
+	G.FUNCS.use_card(voucher)
 end
 
 function RE.Shop.Protocol.buy_booster(request, ok, err)
@@ -58,7 +58,7 @@ function RE.Shop.Protocol.buy_booster(request, ok, err)
 		Err("Not enough money")
 		return
 	end
-	
+	G.FUNCS.use_card(booster)
 end
 
 function RE.Shop.Protocol.reroll(request, ok, err)

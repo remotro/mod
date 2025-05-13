@@ -2,7 +2,7 @@ RE.Shop = {}
 RE.Shop.Protocol = {}
 
 function RE.Shop.info()
-	return { jokers = G.shop_jokers.cards, vouchers = G.shop_vouchers.cards, boosters = G.Shop_booster.cards }
+	return { jokers = G.shop_jokers, vouchers = G.shop_vouchers, boosters = G.shop_booster }
 end
 
 function RE.Shop.Protocol.buy_main(request, ok, err)

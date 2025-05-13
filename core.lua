@@ -22,11 +22,13 @@ RE.NETWORKING_THREAD:start(SMODS.Mods["Remotro"].config.server_url, SMODS.Mods["
 RE.JSON = RE.load_re_file("vendor/json/json.lua")
 RE.load_re_file("net/client.lua")
 
+RE.load_re_file("hooks/util.lua")
 RE.load_re_file("hooks/deck.lua")
 RE.load_re_file("hooks/menu.lua")
 RE.load_re_file("hooks/play.lua")
 RE.load_re_file("hooks/blinds.lua")
 RE.load_re_file("hooks/screen.lua")
+RE.load_re_file("hooks/overview.lua")
 RE.load_re_file("hooks/manager.lua")
 
 RE.Client.connect()

@@ -2,6 +2,12 @@ RE.Play = {}
 RE.Play.Protocol = {}
 
 function RE.Play.info()
+    local blind_status = G.GAME.current_round
+	local hands = blind_status.hands_left
+	local discards = blind_status.discards_left
+	local money = G.GAME.dollars
+	local score = G.GAME.chips
+
     local hand = G.hand.cards
     local json_hand = {}
     for i, card in ipairs(hand) do
@@ -14,7 +20,14 @@ function RE.Play.info()
         end
         table.insert(json_hand, json)
     end
-    return { current_blind = RE.Blinds.current(), hand = json_hand }
+    return { 
+		hand = json_hand,
+		current_blind = RE.Blinds.current(),
+		score = score,
+		hands = hands,
+		discards = discards,
+		money = money
+	}
 end
 
 function RE.Play.Protocol.click(request, ok, err)
@@ -54,13 +67,18 @@ function RE.Play.Protocol.play(request, ok, err)
         return
     end
 
-    -- Can get away with not including a UI element here since its not used
-    G.FUNCS.play_cards_from_highlighted(nil)
-    RE.Screen.await({G.STATES.SELECTING_HAND, G.STATES.ROUND_EVAL, G.STATES.GAME_OVER, G.STATES.NEW_ROUND}, function(new_state)
+    G.GAME.chips = G.GAME.blind.chips
+    G.STATE = G.STATES.HAND_PLAYED
+    G.STATE_COMPLETE = true
+    end_round()
+
+    RE.Screen.await({G.STATES.SELECTING_HAND, G.STATES.ROUND_EVAL, G.STATES.GAME_OVER}, function(new_state)
         if new_state == G.STATES.SELECTING_HAND then
             ok({Again = RE.Play.info()})
-        elseif new_state == G.STATES.ROUND_EVAL or new_state == G.STATES.NEW_ROUND then
-            ok({RoundOver = {}})
+        elseif new_state == G.STATES.ROUND_EVAL then
+            RE.Overview.round(function(res)
+                ok({RoundOver = res})
+            end)
         elseif new_state == G.STATES.GAME_OVER then
             ok({GameOver = {}})
         end

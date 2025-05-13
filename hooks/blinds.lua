@@ -8,12 +8,6 @@ end
 
 function RE.Blinds.current()
     local current_blind_choice = G.GAME.blind_on_deck
-    sendDebugMessage("current_blind_choice: " .. current_blind_choice)
-    if current_blind_choice then
-        sendDebugMessage("current_blind_choice is not nil")
-    else
-        sendDebugMessage("current_blind_choice is nil")
-    end
     local blind_id = G.GAME.round_resets.blind_choices[current_blind_choice]
     if current_blind_choice == "Boss" then
         return { Boss = { chips = calculate_chip_requirement(blind_id) } }
@@ -54,7 +48,8 @@ function RE.Blinds.choices()
 end
 
 local function get_blind_choice_widget()
-	selected = G.GAME.round_resets.blind_states["Small"] == "Select" and 1 or 2
+	selected_blind = G.GAME.blind_on_deck
+	selected = selected_blind == "Small" and 1 or selected_blind == "Big" and 2 or 3
 	return G.blind_select.UIRoot.children[1].children[selected].config.object:get_UIE_by_ID('select_blind_button')
 end
 
@@ -74,7 +69,7 @@ function RE.Blinds.Protocol.skip_blind(request, ok, err)
     if G.STATE ~= G.STATES.BLIND_SELECT then
         err("cannot do this action, must be in blind_select but in " .. G.STATE)
         return
-	elseif G.GAME.round_resets.blind_states["Boss"] == "Select" then
+	elseif G.GAME.blind_on_deck == "Boss" then
 		err("Cannot skip Boss Blind")
 		return
 	end

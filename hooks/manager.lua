@@ -56,6 +56,9 @@ function Game:update(dt)
 				RE.Shop.Protocol.reroll(request.body, result_responder("shop/reroll/result"))
 			elseif request.kind == "shop/continue" then
 				RE.Shop.Protocol.continue(request.body, result_responder("shop/continue/result"))
+        
+			elseif request.kind == "overview/cash_out" then
+				RE.Overview.Protocol.cash_out(result_responder("shop/info"))
 			end
 		end
 	until not request

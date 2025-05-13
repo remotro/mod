@@ -42,6 +42,8 @@ function Game:update(dt)
                 RE.Play.Protocol.play(request.body, result_responder("play/play/result"))
 			elseif request.kind == "play/discard" then
 				RE.Play.Protocol.discard(request.body, result_responder("play/discard/result"))
+			elseif request.kind == "overview/cash_out" then
+				RE.Overview.Protocol.cash_out(result_responder("shop/info"))
 			end
 		end
 	until not request

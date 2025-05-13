@@ -59,9 +59,9 @@ function RE.Play.Protocol.play(request, ok, err)
     RE.Screen.await({G.STATES.SELECTING_HAND, G.STATES.ROUND_EVAL, G.STATES.GAME_OVER, G.STATES.NEW_ROUND}, function(new_state)
         if new_state == G.STATES.SELECTING_HAND then
             ok({Again = RE.Play.info()})
-        elseif new_state == G.STATES.ROUND_EVAL then
+        elseif new_state == G.STATES.ROUND_EVAL or new_state == G.STATES.NEW_ROUND then
             ok({RoundOver = {}})
-        elseif new_state == G.STATES.GAME_OVER or new_state == G.STATES.NEW_ROUND then
+        elseif new_state == G.STATES.GAME_OVER then
             ok({GameOver = {}})
         end
     end)

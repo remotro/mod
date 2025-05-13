@@ -8,9 +8,13 @@ local function translate_config(config)
     elseif string.find(config.name, "^tag") then
         kind = { Tag = config.tag }
     elseif string.find(config.name, "^blind") then
-        kind = { Blind = [] }
+        kind = { Blind = {} }
     elseif string.find(config.name, "^interest") then
-        kind = { Interest = [] }
+        kind = { Interest = {} }
+    elseif string.find(config.name, "hands") then
+        kind = { Hands = config.disp }
+    elseif string.find(config.name, "discards") then
+        kind = { Discards = config.disp }
     end
     return {
         kind = kind,

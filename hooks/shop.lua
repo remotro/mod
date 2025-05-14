@@ -2,7 +2,24 @@ RE.Shop = {}
 RE.Shop.Protocol = {}
 
 function RE.Shop.info()
-	return { jokers = G.shop_jokers, vouchers = G.shop_vouchers, boosters = G.shop_booster }
+	local main = G.shop_jokers.cards
+	local vouchers = G.shop_vouchers.cards
+	local boosters = G.shop_booster.cards
+
+	local main_row = {}
+	for a in main do
+		for i, card in ipairs(jokers) do
+			if card.set == "Joker" then
+				local json = { id = i, RE.Jokers.joker(card) }
+			elseif card.set == "Tarot" then
+				local json = { id = i, RE.Consumables.Tarot(card) }
+			elseif card.set == "Planet" then
+				local json = { id = i, RE.Consumables.Planet(card) }
+			end
+		end
+		table.insert(main_row, json)
+	end
+	return { jokers = main_row , vouchers = vouchers, boosters = boosters }
 end
 
 function RE.Shop.Protocol.buy_main(request, ok, err)

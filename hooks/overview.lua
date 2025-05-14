@@ -29,10 +29,10 @@ function RE.Overview.Protocol.cash_out(ok, err)
         if new_state == G.STATES.SHOP then
 			RE.Util.await(
 				function()
-					local jokers = G.shop_jokers
-					local vouchers = G.shop_vouchers
-					local boosters = G.shop_booster
-					return jokers ~= nil and vouchers ~= nil and boosters ~= nil and #jokers.cards > 0 and #vouchers.cards > 0 and #boosters.cards > 0
+					local jokers = G.shop_jokers.cards
+					local vouchers = G.shop_vouchers.cards
+					local boosters = G.shop_booster.cards
+					return jokers ~= nil and vouchers ~= nil and boosters ~= nil and #jokers > 0 and #vouchers > 0 and #boosters > 0
 				end,
 				function(res)
 					ok({jokers = G.shop_jokers.cards, vouchers = G.shop_vouchers.cards, boosters = G.shop_booster.cards})

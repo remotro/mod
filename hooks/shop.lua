@@ -107,4 +107,7 @@ function RE.Shop.Protocol.continue(request, ok, err)
 		return
 	end
 	G.FUNCS.toggle_shop()
+	RE.Screen.await(G.STATES.BLIND_SELECT, function()
+		ok(RE.Blinds.choices())
+	end)
 end

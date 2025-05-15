@@ -9,27 +9,28 @@ function RE.Shop.info()
 	local main_row = {}
 	local vouchers_row = {}
 	local boosters_row = {}
-	for k, card in pairs(main) do
-		if card.config.set == "Joker" then
-			local json = { id = card.config.center.key, RE.Jokers.joker(card) }
-		elseif card.config.set == "Tarot" then
-			local json = { id = card.config.center.key, RE.Consumables.tarot(card) }
-		elseif card.config.set == "Planet" then
-			local json = { id = card.config.center.key, RE.Consumables.planet(card) }
-		elseif card.config.set == "Spectral" then
-			local json = { id = card.config.center.key, RE.Consumables.spectral(card) }
+	for k, card in ipairs(main) do
+		local json = {"Failed"}
+		if card.ability.set == "Joker" then
+			json = { Joker = card.config.center.key }
+		elseif card.ability.set == "Tarot" then
+			json = { Tarot = card.config.center.key }
+		elseif card.ability.set == "Planet" then
+			json = { Planet = card.config.center.key }
+		elseif card.ability.set == "Spectral" then
+			json = { Spectral = card.config.center.key }
 		end
 		table.insert(main_row, json)
 	end
-	for k, voucher in pairs(vouchers) do
-		local json = {voucher.config.center.key}
+	for k, voucher in ipairs(vouchers) do
+		local json = {voucher = voucher.config.center.key}
 		table.insert(vouchers_row, json)
 	end
-	for k, booster in pairs(boosters) do
-		local json = {}
+	for k, booster in ipairs(boosters) do
+		local json = {booster = string.sub(booster.config.center.key,1,-3)}
 		table.insert(boosters_row, json)
 	end
-	return { jokers = main_row , vouchers = vouchers_row, boosters = boosters_row }
+	return { main = main_row , vouchers = vouchers_row, boosters = boosters_row }
 end
 
 function RE.Shop.Protocol.buy_main(request, ok, err)

@@ -35,10 +35,9 @@ function RE.Overview.Protocol.cash_out(ok, err)
 					return jokers ~= nil and vouchers ~= nil and boosters ~= nil and #jokers > 0 and #vouchers > 0 and #boosters > 0
 				end,
 				function(res)
-					ok({jokers = G.shop_jokers.cards, vouchers = G.shop_vouchers.cards, boosters = G.shop_booster.cards})
+					ok(RE.Shop.info())
 				end
 			)
-            ok(RE.Shop.info())
         end
     end)
 end

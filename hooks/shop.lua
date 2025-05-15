@@ -7,17 +7,29 @@ function RE.Shop.info()
 	local boosters = G.shop_booster.cards
 
 	local main_row = {}
-	for k, v in ipairs(main) do
-		if card.set == "Joker" then
-			local json = { id = k, RE.Jokers.joker(card) }
-		elseif card.set == "Tarot" then
-			local json = { id = k, RE.Consumables.Tarot(card) }
-		elseif card.set == "Planet" then
-			local json = { id = k, RE.Consumables.Planet(card) }
+	local vouchers_row = {}
+	local boosters_row = {}
+	for k, card in pairs(main) do
+		if card.config.set == "Joker" then
+			local json = { id = card.config.center.key, RE.Jokers.joker(card) }
+		elseif card.config.set == "Tarot" then
+			local json = { id = card.config.center.key, RE.Consumables.tarot(card) }
+		elseif card.config.set == "Planet" then
+			local json = { id = card.config.center.key, RE.Consumables.planet(card) }
+		elseif card.config.set == "Spectral" then
+			local json = { id = card.config.center.key, RE.Consumables.spectral(card) }
 		end
+		table.insert(main_row, json)
 	end
-	table.insert(main_row, json)
-	return { jokers = main_row , vouchers = vouchers, boosters = boosters }
+	for k, voucher in pairs(vouchers) do
+		local json = {voucher.config.center.key}
+		table.insert(vouchers_row, json)
+	end
+	for k, booster in pairs(boosters) do
+		local json = {}
+		table.insert(boosters_row, json)
+	end
+	return { jokers = main_row , vouchers = vouchers_row, boosters = boosters_row }
 end
 
 function RE.Shop.Protocol.buy_main(request, ok, err)

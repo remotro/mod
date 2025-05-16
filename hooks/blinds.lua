@@ -10,7 +10,7 @@ function RE.Blinds.current()
     local current_blind_choice = G.GAME.blind_on_deck
     local blind_id = G.GAME.round_resets.blind_choices[current_blind_choice]
     if current_blind_choice == "Boss" then
-        return { Boss = { chips = calculate_chip_requirement(blind_id) } }
+        return { Boss = { chips = calculate_chip_requirement(blind_id), kind = blind_id } }
     else
         local ret = {}
         ret[current_blind_choice] = { chips = calculate_chip_requirement(blind_id) }

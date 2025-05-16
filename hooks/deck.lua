@@ -3,7 +3,7 @@ RE.Deck = {}
 function RE.Deck.playing_card(card)
     local edition = nil;
     if card.edition then
-        edition = "e_" .. string.lower(card.edition.type);
+        edition = card.edition.key;
     end
     local enhancement = nil;
     if card.ability.name ~= "Default Base" then

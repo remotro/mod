@@ -71,7 +71,14 @@ function RE.Overview.Protocol.cash_out(ok, err)
             G.FUNCS.cash_out(fakebutton)
             RE.Screen.await(G.STATES.SHOP, function(new_state)
                 if new_state == G.STATES.SHOP then
-                    ok(RE.Shop.info())
+					RE.Util.await(
+						function()
+							return G.shop_jokers ~= nil and G.shop_vouchers ~= nil and G.shop_booster ~= nil
+						end,
+						function(res)
+							ok(RE.Shop.info())
+						end)
+						
                 end
             end)
             return true

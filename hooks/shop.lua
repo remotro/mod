@@ -47,6 +47,7 @@ function RE.Shop.Protocol.buy_main(request, ok, err)
 		return
 	end
 	G.FUNCS.buy_from_shop({config={ref_table=card}})
+	ok(RE.Shop.info())
 end
 
 
@@ -62,6 +63,7 @@ function RE.Shop.Protocol.buy_and_use(request, ok, err)
 		return
 	end
 	G.FUNCS.buy_from_shop({config={ref_table=card}})
+	ok(RE.Shop.info())
 end
 
 function RE.Shop.Protocol.buy_voucher(request, ok, err)
@@ -75,6 +77,7 @@ function RE.Shop.Protocol.buy_voucher(request, ok, err)
 		return
 	end
 	G.FUNCS.use_card({config={ref_table=voucher}})
+	ok(RE.Shop.info())
 end
 
 function RE.Shop.Protocol.buy_booster(request, ok, err)
@@ -88,6 +91,7 @@ function RE.Shop.Protocol.buy_booster(request, ok, err)
 		return
 	end
 	G.FUNCS.use_card({config={ref_table=pack}})
+	ok(RE.Shop.info())
 end
 
 function RE.Shop.Protocol.reroll(request, ok, err)
@@ -100,6 +104,7 @@ function RE.Shop.Protocol.reroll(request, ok, err)
 		return
 	end
 	G.FUNCS.reroll_shop()
+	ok(RE.Shop.info())
 end
 
 function RE.Shop.Protocol.continue(request, ok, err)

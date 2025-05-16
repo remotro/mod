@@ -64,20 +64,17 @@ function RE.Overview.Protocol.cash_out(ok, err)
             button = ""
         }
     }
-    G.FUNCS.cash_out(fakebutton)
-    RE.Screen.await(G.STATES.SHOP, function(new_state)
-        if new_state == G.STATES.SHOP then
-			RE.Util.await(
-				function()
-					local jokers = G.shop_jokers.cards
-					local vouchers = G.shop_vouchers.cards
-					local boosters = G.shop_booster.cards
-					return jokers ~= nil and vouchers ~= nil and boosters ~= nil and #jokers > 0 and #vouchers > 0 and #boosters > 0
-				end,
-				function(res)
-					ok(RE.Shop.info())
-				end
-			)
+    G.E_MANAGER:add_event(Event({
+        trigger = 'immediate',
+        no_delete = true,
+        func = function()
+            G.FUNCS.cash_out(fakebutton)
+            RE.Screen.await(G.STATES.SHOP, function(new_state)
+                if new_state == G.STATES.SHOP then
+                    ok(RE.Shop.info())
+                end
+            end)
+            return true
         end
-    end)
+}))
 end

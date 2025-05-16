@@ -1,9 +1,9 @@
 RE.Jokers = {}
 
 function RE.Jokers.joker(card)
-	local edition = nil
+	local edition = "e_base"
 	if card.edition then
-		edition = "e_" .. string.lower(card.edition.type)
+		edition = card.edition.key
 	end
-	return { item = {Joker = card.config.center.key, edition = edition }, price = card.cost }
+	return { item = {Joker = card.config.center.key }, price = card.cost, edition = edition }
 end

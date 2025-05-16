@@ -28,8 +28,9 @@ function RE.Overview.round(cb)
         function()
             local last = G.RE.earnings[#G.RE.earnings]
             return last ~= nil and last.name == "bottom"
-        end, 
+        end,
         function(res)
+			RE.Util.inspectTable(G.RE.earnings, "earnings.txt")
             local earnings = {}
             for _, earning in ipairs(G.RE.earnings) do
                 if earning.name == "bottom" then

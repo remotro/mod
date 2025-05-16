@@ -41,14 +41,14 @@ function RE.Shop.Protocol.buy_main(request, ok, err)
 	local card = G.shop_jokers.cards[request.index]
 	inspectTable(card, "card.txt")
 	inspectTable(G.shop_jokers, "shop_jokers.txt")
-	if not G.FUNCS.check_for_buy_space(card.config.ref_table) then
+	if not G.FUNCS.check_for_buy_space(card) then
 		err("Cannot do this action, No space")
 	end
-	if (card.config.ref_table.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (card.config.ref_table.cost > 0) then
+	if (card.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (card.cost > 0) then
 		err("Not enough money")
 		return
 	end
-	G.FUNCS.buy_from_shop(card)
+	G.FUNCS.buy_from_shop({config={ref_table=card}})
 end
 
 function inspectTable(t, filePath, options)
@@ -59,7 +59,6 @@ function inspectTable(t, filePath, options)
     local visited = options.visited or {}
     local file = options.file or io.open(filePath, "a")  -- "w" = overwrite mode
     local depth = options.depth or 0
-
     -- Check for circular references
     if visited[t] then
         file:write(currentPath .. " = [CIRCULAR REFERENCE]\n")
@@ -67,21 +66,18 @@ function inspectTable(t, filePath, options)
         return
     end
     visited[t] = true
-
     -- Handle non-table values or max depth reached
     if type(t) ~= "table" or depth >= maxDepth then
         file:write(currentPath .. " = " .. tostring(t) .. "\n")
         if not options.file then file:close() end
         return
     end
-
     -- Handle empty tables
     if next(t) == nil then
         file:write(currentPath .. " = {}\n")
         if not options.file then file:close() end
         return
     end
-
     -- Process all key-value pairs
     for key, value in pairs(t) do
         -- Format the path component
@@ -93,9 +89,7 @@ function inspectTable(t, filePath, options)
         else
             pathComponent = "[" .. tostring(key) .. "]"
         end
-
         local fullPath = currentPath .. pathComponent
-
         -- Handle nested tables
         if type(value) == "table" then
             inspectTable(value, filePath, {
@@ -109,7 +103,6 @@ function inspectTable(t, filePath, options)
             file:write(fullPath .. " = " .. tostring(value) .. "\n")
         end
     end
-
     -- Close file if we're the top-level caller
     if not options.file then file:close() end
 end
@@ -121,11 +114,11 @@ function RE.Shop.Protocol.buy_and_use(request, ok, err)
 	end
 	local card = G.shop_jokers.cards[request.index]
 	card.config.id = 'buy_and_use'
-	if (card.config.ref_table.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (card.config.ref_table.cost > 0) then
+	if (card.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (card.cost > 0) then
 		err("Not enough money")
 		return
 	end
-	G.FUNCS.buy_from_shop(card)
+	G.FUNCS.buy_from_shop({config={ref_table=card}})
 end
 
 function RE.Shop.Protocol.buy_voucher(request, ok, err)
@@ -134,11 +127,11 @@ function RE.Shop.Protocol.buy_voucher(request, ok, err)
 		return
 	end
 	local voucher = G.shop_vouchers.cards[request.index]
-	if (voucher.config.ref_table.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (voucher.config.ref_table.cost > 0) then
+	if (voucher.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (voucher.cost > 0) then
 		err("Not enough money")
 		return
 	end
-	G.FUNCS.use_card(voucher)
+	G.FUNCS.use_card({config={ref_table=voucher}})
 end
 
 function RE.Shop.Protocol.buy_booster(request, ok, err)
@@ -147,11 +140,11 @@ function RE.Shop.Protocol.buy_booster(request, ok, err)
 		return
 	end
 	local pack = G.shop_booster.cards[request.index]
-	if (pack.config.ref_table.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (pack.config.ref_table.cost > 0) then
+	if (pack.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (pack.cost > 0) then
 		err("Not enough money")
 		return
 	end
-	G.FUNCS.use_card(booster)
+	G.FUNCS.use_card({config={ref_table=pack}})
 end
 
 function RE.Shop.Protocol.reroll(request, ok, err)

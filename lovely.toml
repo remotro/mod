@@ -40,14 +40,28 @@ times = 1
 [patches.pattern]
 target = "functions/common_events.lua"
 pattern = '''
-function add_round_eval_row(config)
-    local config = config or {}
+                G.VIBRATION = G.VIBRATION + 1
+                return true
+            end
+        }))
+    end
+end
 '''
 position = "at"
-payload = '''
-function add_round_eval_row(config)
-    local config = config or {}
-    table.insert(G.RE.earnings, config)
+payload = '''                G.VIBRATION = G.VIBRATION + 1
+                return true
+            end
+        }))
+    end
+    G.E_MANAGER:add_event(Event({
+        trigger = 'immediate',
+        no_delete = true,
+        func = function()
+            table.insert(G.RE.earnings, config)
+            return true
+        end
+    }))
+end
 '''
 match_indent = true
 times = 1

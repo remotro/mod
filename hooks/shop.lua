@@ -10,24 +10,25 @@ function RE.Shop.info()
 	local vouchers_row = {}
 	local boosters_row = {}
 	for k, card in ipairs(main) do
+		RE.Util.inspectTable(card, "card.txt")
 		local json = {"Failed"}
 		if card.ability.set == "Joker" then
-			json = { Joker = card.config.center.key }
+			json = RE.Jokers.joker(card)
 		elseif card.ability.set == "Tarot" then
-			json = { Tarot = card.config.center.key }
+			json = RE.Consumables.tarot(card)
 		elseif card.ability.set == "Planet" then
-			json = { Planet = card.config.center.key }
+			json = RE.Consumables.planet(card)
 		elseif card.ability.set == "Spectral" then
-			json = { Spectral = card.config.center.key }
+			json = RE.Consumables.spectral(card)
 		end
 		table.insert(main_row, json)
 	end
 	for k, voucher in ipairs(vouchers) do
-		local json = {voucher = voucher.config.center.key}
+		local json = { voucher = voucher.config.center.key, price = voucher.cost }
 		table.insert(vouchers_row, json)
 	end
 	for k, booster in ipairs(boosters) do
-		local json = {booster = string.sub(booster.config.center.key,1,-3)}
+		local json = { booster = string.sub(booster.config.center.key,1,-3), price = booster.cost }
 		table.insert(boosters_row, json)
 	end
 	return { main = main_row , vouchers = vouchers_row, boosters = boosters_row }

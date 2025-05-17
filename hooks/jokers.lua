@@ -5,5 +5,5 @@ function RE.Jokers.joker(card)
 	if card.edition then
 		edition = card.edition.key
 	end
-	return { item = {Joker = card.config.center.key }, price = card.cost, edition = edition }
+	return { kind = card.config.center.key, price = card.cost, edition = edition }
 end

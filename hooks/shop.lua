@@ -13,13 +13,13 @@ function RE.Shop.info()
 		RE.Util.inspectTable(card, "card.txt")
 		local json = {"Failed"}
 		if card.ability.set == "Joker" then
-			json = RE.Jokers.joker(card)
+			json = { Joker = RE.Jokers.joker(card) }
 		elseif card.ability.set == "Tarot" then
-			json = RE.Consumables.tarot(card)
+			json = { Tarot = RE.Consumables.tarot(card) }
 		elseif card.ability.set == "Planet" then
-			json = RE.Consumables.planet(card)
+			json = { Planet = RE.Consumables.planet(card) }
 		elseif card.ability.set == "Spectral" then
-			json = RE.Consumables.spectral(card)
+			json = { Spectral = RE.Consumables.spectral(card) }
 		end
 		table.insert(main_row, json)
 	end

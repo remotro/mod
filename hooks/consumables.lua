@@ -5,7 +5,7 @@ function RE.Consumables.tarot(card)
 	if card.edition then
 		edition = card.edition.key
 	end
-	return { item = { Tarot = card.config.center.key }, price = card.cost, edition = edition }
+	return { kind = card.config.center.key, price = card.cost, negative = edition == "e_negative" }
 end
 
 function RE.Consumables.planet(card)
@@ -13,7 +13,7 @@ function RE.Consumables.planet(card)
 	if card.edition then
 		edition = card.edition.key
 	end
-	return { item = { Planet = card.config.center.key }, price = card.cost, edition = edition }
+	return { kind = card.config.center.key, price = card.cost, negative = edition == "e_negative" }
 end
 
 function RE.Consumables.spectral(card)
@@ -21,6 +21,6 @@ function RE.Consumables.spectral(card)
 	if card.edition then
 		edition = card.edition.key
 	end
-	return { item = { Spectral = card.config.center.key }, price = card.cost, edition = edition}
+	return { kind = card.config.center.key, price = card.cost, negative = edition == "e_negative" }
 end
 

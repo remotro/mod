@@ -78,7 +78,9 @@ function RE.Shop.Protocol.buy_voucher(request, ok, err)
 		return
 	end
 	G.FUNCS.use_card({config={ref_table=voucher}})
-	ok(RE.Shop.info())
+	RE.Screen.await(G.STATES.SHOP, function()
+		ok(RE.Shop.info())
+	end)
 end
 
 function RE.Shop.Protocol.buy_booster(request, ok, err)

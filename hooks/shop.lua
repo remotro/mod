@@ -30,7 +30,7 @@ function RE.Shop.info()
 		local json = { kind = string.sub(booster.config.center.key,1,-3), price = booster.cost }
 		table.insert(boosters_row, json)
 	end
-	return { hud = RE.Blinds.info(), main = main_row , vouchers = vouchers_row, boosters = boosters_row }
+	return { hud = RE.Hud.info(), main = main_row , vouchers = vouchers_row, boosters = boosters_row }
 end
 
 function RE.Shop.Protocol.buy_main(request, ok, err)

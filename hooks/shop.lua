@@ -30,7 +30,7 @@ function RE.Shop.info()
 		local json = { kind = string.sub(booster.config.center.key,1,-3), price = booster.cost }
 		table.insert(boosters_row, json)
 	end
-	return { hud = RE.Hud.get(), main = main_row , vouchers = vouchers_row, boosters = boosters_row }
+	return { hud = RE.Blinds.info(), main = main_row , vouchers = vouchers_row, boosters = boosters_row }
 end
 
 function RE.Shop.Protocol.buy_main(request, ok, err)
@@ -38,7 +38,7 @@ function RE.Shop.Protocol.buy_main(request, ok, err)
 		err("Cannot do this action, must be in shop but in " .. G.STATE)
 		return
 	end
-	local card = G.shop_jokers.cards[request.index]
+	local card = G.shop_jokers.cards[request.index + 1]
 	if not G.FUNCS.check_for_buy_space(card) then
 		err("Cannot do this action, No space")
 	end
@@ -56,7 +56,7 @@ function RE.Shop.Protocol.buy_and_use(request, ok, err)
 		err("Cannot do this action, must be in shop but in " ..G.STATE)
 		return
 	end
-	local card = G.shop_jokers.cards[request.index]
+	local card = G.shop_jokers.cards[request.index + 1]
 	card.config.id = 'buy_and_use'
 	if (card.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (card.cost > 0) then
 		err("Not enough money")
@@ -71,7 +71,7 @@ function RE.Shop.Protocol.buy_voucher(request, ok, err)
 		err("Cannot do this action, must be in shop but in " .. G.STATE)
 		return
 	end
-	local voucher = G.shop_vouchers.cards[request.index]
+	local voucher = G.shop_vouchers.cards[request.index + 1]
 	if (voucher.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (voucher.cost > 0) then
 		err("Not enough money")
 		return
@@ -85,7 +85,7 @@ function RE.Shop.Protocol.buy_booster(request, ok, err)
 		err("Cannot do this action, must be in shop but in " .. G.STATE)
 		return
 	end
-	local pack = G.shop_booster.cards[request.index]
+	local pack = G.shop_booster.cards[request.index + 1]
 	if (pack.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (pack.cost > 0) then
 		err("Not enough money")
 		return
@@ -114,6 +114,6 @@ function RE.Shop.Protocol.continue(request, ok, err)
 	end
 	G.FUNCS.toggle_shop()
 	RE.Screen.await(G.STATES.BLIND_SELECT, function()
-		ok(RE.Blinds.choices())
+		ok(RE.Blinds.info())
 	end)
 end

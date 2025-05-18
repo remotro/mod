@@ -1,7 +1,7 @@
 RE.Hud = {}
 RE.Hud.Protocol = {}
 
-function RE.Hud.get()
+function RE.Blinds.info()
 	local hands = G.GAME.current_round.hands_left
 	local discards = G.GAME.current_round.discards_left
 	local money = G.GAME.dollars

@@ -20,7 +20,7 @@ function RE.Play.info()
 		hand = json_hand,
 		current_blind = RE.Blinds.current(),
 		score = score,
-		hud = RE.Hud.get()
+		hud = RE.Blinds.info()
 	}
 end
 

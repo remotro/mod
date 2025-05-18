@@ -35,5 +35,6 @@ RE.load_re_file("hooks/jokers.lua")
 RE.load_re_file("hooks/consumables.lua")
 
 RE.load_re_file("ui/smods.lua")
+RE.load_re_file("ui/indicator.lua")
 
 RE.Client.connect()

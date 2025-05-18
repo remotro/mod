@@ -8,7 +8,7 @@ local function recv(msg)
     return love.thread.getChannel("networkToUi"):pop()
 end
 
-function RE.Client.getConnectionStatus()
+function RE.Client.connected()
 	--Add a thing to check if connected to server
 	return true
 end

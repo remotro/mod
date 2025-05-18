@@ -11,7 +11,7 @@ SMODS.Mods.Remotro.config_tab = function()
 			{
 				n = G.UIT.R,
 				config = {
-					padding = 0,
+					padding = 0.25,
 					align = "cm",
 				},
 				nodes = {
@@ -25,7 +25,7 @@ SMODS.Mods.Remotro.config_tab = function()
 					},
 					create_text_input({
 							w = 4,
-							max_length = 38, -- should be able to support ipv6 :)
+							max_length = 38,
 							prompt_text = "Address",
 							ref_table = SMODS.Mods["Remotro"].config,
 							ref_value = "server_url",
@@ -46,7 +46,7 @@ SMODS.Mods.Remotro.config_tab = function()
 			{
 				n = G.UIT.R,
 				config = {
-					padding = 0,
+					padding = 0.25,
 					align = "cm",
 				},
 				nodes = {
@@ -79,8 +79,14 @@ SMODS.Mods.Remotro.config_tab = function()
 							colour = G.C.UI.TEXT_LIGHT,
 						},
 					},
-				}
-			}
+				},
+			},
+			UIBox_button({
+				button = "remotro_reconnect",
+				label = RE.Client.connected() and {"Connected"} or {"Disconnected"},
+				scale = 0.5,
+				id = "reconnect"
+			})
 		}
 	}
 end

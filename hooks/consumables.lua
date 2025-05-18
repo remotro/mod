@@ -1,5 +1,15 @@
 RE.Consumables = {}
 
+function RE.Consumables.consumable(card)
+	if card.ability.set == "Tarot" then
+		return { Tarot = RE.Consumables.tarot(card) }
+	elseif card.ability.set == "Planet" then
+		return { Planet = RE.Consumables.planet(card) }
+	elseif card.ability.set == "Spectral" then
+		return { Spectral = RE.Consumables.spectral(card) }
+	end
+end
+
 function RE.Consumables.tarot(card)
 	local edition = "e_base"
 	if card.edition then

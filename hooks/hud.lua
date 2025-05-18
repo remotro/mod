@@ -41,7 +41,7 @@ end
 function RE.Hud.Protocol.sell_joker(request, context, ok, err)
     local card = G.jokers.cards[request.index + 1]
     RE.Util.enqueue(function()
-        card:sell_card()
+        G.FUNCS.sell_card({config={ref_table=card}})
         RE.Util.await(function()
             return G.CONTROLLER.locks.selling_card ~= nil
         end, function()

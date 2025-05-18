@@ -55,7 +55,7 @@ function Game:update(dt)
 			elseif request.kind == "shop/reroll" then
 				RE.Shop.Protocol.reroll(request.body, result_responder("shop/info"))
 			elseif request.kind == "shop/continue" then
-				RE.Shop.Protocol.continue(request.body, result_responder("shop/info"))
+				RE.Shop.Protocol.continue(request.body, result_responder("blind_select/info"))
         
 			elseif request.kind == "overview/cash_out" then
 				RE.Overview.Protocol.cash_out(result_responder("shop/info"))
@@ -69,6 +69,8 @@ function Game:update(dt)
 				local responder = result_responder(context .. "/info")
 				if action == "jokers/sell" then
 					RE.Hud.Protocol.sell_joker(request.body, context, responder)
+				elseif action == "jokers/move" then
+					RE.Hud.Protocol.move_joker(request.body, context, responder)
 				end
 			end
 		end

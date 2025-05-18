@@ -52,3 +52,13 @@ function RE.Hud.Protocol.sell_joker(request, context, ok, err)
     end)
 end
 
+function RE.Hud.Protocol.move_joker(request, context, ok, err)
+    local from = request.from
+    local to = request.to
+    local tmp = G.jokers.cards[from + 1]
+    table.remove(G.jokers.cards, from + 1)
+    table.insert(G.jokers.cards, to + 1, tmp)
+    RE.Util.enqueue(function()
+        ok(context_screen(context))
+    end)
+end

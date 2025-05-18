@@ -67,6 +67,9 @@ SMODS.Mods.Remotro.config_tab = function()
 							extended_corpus = false,
 							keyboard_offset = 1,
 							id = "port",
+							callback = function(var)
+								SMODS.Mods["Remotro"].config.server_port = tonumber(SMODS.Mods["Remotro"].config.server_port)
+							end
 					}),
 					{
 						n = G.UIT.T,

@@ -75,6 +75,8 @@ function Game:update(dt)
 					RE.Hud.Protocol.sell_consumable(request.body, context, responder)
 				elseif action == "consumables/move" then
 					RE.Hud.Protocol.move_consumable(request.body, context, responder)
+				elseif action == "consumables/use" then
+					RE.Hud.Protocol.use_consumable(request.body, context, responder)
 				end
 			end
 		end

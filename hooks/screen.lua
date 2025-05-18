@@ -12,6 +12,7 @@ function RE.Screen.Protocol.get(ok, err)
 		ok({Shop = RE.Shop.info()})
     end
 end
+
 function RE.Screen.await(states, cb)
     -- Convert single state to table if needed
     if type(states) ~= "table" then

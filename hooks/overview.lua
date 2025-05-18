@@ -48,7 +48,7 @@ function RE.Overview.round(cb)
                 total_earned = total_earned + earning.value
             end
             
-            cb({ hud = RE.Hud.get(), earnings = earnings, total_earned = total_earned })
+            cb({ hud = RE.Hud.info(), earnings = earnings, total_earned = total_earned })
         end
     )
 end

@@ -41,7 +41,7 @@ end
 
 function RE.Blinds.info()
     return {
-        hud = RE.Blinds.info(),
+        hud = RE.Hud.info(),
         blinds = {
             small = RE.Blinds.choice("Small"),
             big = RE.Blinds.choice("Big"),

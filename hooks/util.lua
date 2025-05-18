@@ -16,6 +16,17 @@ function RE.Util.await(a, cb)
     }))
 end
 
+function RE.Util.enqueue(cb)
+    G.E_MANAGER:add_event(Event({
+        trigger = 'immediate',
+        no_delete = true,
+        func = function()
+            cb()
+            return true
+        end
+    }))
+end
+
 -- function RE.Util.inspectTable(t, filePath, options)
 --     -- Default options
 --     options = options or {}

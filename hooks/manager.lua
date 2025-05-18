@@ -71,6 +71,10 @@ function Game:update(dt)
 					RE.Hud.Protocol.sell_joker(request.body, context, responder)
 				elseif action == "jokers/move" then
 					RE.Hud.Protocol.move_joker(request.body, context, responder)
+				elseif action == "consumables/sell" then
+					RE.Hud.Protocol.sell_consumable(request.body, context, responder)
+				elseif action == "consumables/move" then
+					RE.Hud.Protocol.move_consumable(request.body, context, responder)
 				end
 			end
 		end

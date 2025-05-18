@@ -62,3 +62,22 @@ function RE.Hud.Protocol.move_joker(request, context, ok, err)
         ok(context_screen(context))
     end)
 end
+
+function RE.Hud.Protocol.sell_consumable(request, context, ok, err)
+    local card = G.consumeables.cards[request.index + 1]
+    RE.Util.enqueue(function()
+        G.FUNCS.sell_card({config={ref_table=card}})
+    end)
+end
+
+function RE.Hud.Protocol.move_consumable(request, context, ok, err)
+    local from = request.from
+    local to = request.to
+    local tmp = G.consumeables.cards[from + 1]
+    table.remove(G.consumeables.cards, from + 1)
+    table.insert(G.consumeables.cards, to + 1, tmp)
+    RE.Util.enqueue(function()
+        ok(context_screen(context))
+    end)
+end
+

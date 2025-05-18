@@ -72,7 +72,7 @@ function RE.Overview.Protocol.cash_out(ok, err)
                 if new_state == G.STATES.SHOP then
 					RE.Util.await(
 						function()
-							return G.shop_jokers ~= nil and G.shop_vouchers ~= nil and G.shop_booster ~= nil
+							return G.shop_jokers ~= nil and #G.shop_jokers.cards > 0 and G.shop_vouchers ~= nil and #G.shop_vouchers.cards > 0 and G.shop_booster ~= nil and #G.shop_booster.cards > 0
 						end,
 						function(res)
 							ok(RE.Shop.info())

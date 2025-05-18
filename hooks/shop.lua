@@ -10,7 +10,6 @@ function RE.Shop.info()
 	local vouchers_row = {}
 	local boosters_row = {}
 	for k, card in ipairs(main) do
-		RE.Util.inspectTable(card, "card.txt")
 		local json = {"Failed"}
 		if card.ability.set == "Joker" then
 			json = { Joker = RE.Jokers.joker(card) }
@@ -24,11 +23,11 @@ function RE.Shop.info()
 		table.insert(main_row, json)
 	end
 	for k, voucher in ipairs(vouchers) do
-		local json = { voucher = voucher.config.center.key, price = voucher.cost }
+		local json = { kind = voucher.config.center.key, price = voucher.cost }
 		table.insert(vouchers_row, json)
 	end
 	for k, booster in ipairs(boosters) do
-		local json = { booster = string.sub(booster.config.center.key,1,-3), price = booster.cost }
+		local json = { kind = string.sub(booster.config.center.key,1,-3), price = booster.cost }
 		table.insert(boosters_row, json)
 	end
 	return { main = main_row , vouchers = vouchers_row, boosters = boosters_row }

@@ -1,8 +1,7 @@
 RE = SMODS.current_mod
 
 function RE.network_bootstrap()
-	local SOCKET = RE.load_re_file("vendor/socket/socket.lua")
-	RE.NETWORKING_THREAD = love.thread.newThread(SOCKET)
+	RE.NETWORKING_THREAD = love.thread.newThread(RE.SOCKET)
 	RE.NETWORKING_THREAD:start(SMODS.Mods["Remotro"].config.server_url, SMODS.Mods["Remotro"].config.server_port)
 end
 
@@ -20,6 +19,8 @@ function RE.load_re_file(file)
 	end
 	return nil
 end
+
+RE.SOCKET = RE.load_re_file("vendor/socket/socket.lua")
 
 RE.JSON = RE.load_re_file("vendor/json/json.lua")
 RE.load_re_file("net/client.lua")

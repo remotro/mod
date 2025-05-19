@@ -40,8 +40,8 @@ end
 
 function RE.Hud.Protocol.sell_joker(request, context, ok, err)
     local card = G.jokers.cards[request.index + 1]
+    G.FUNCS.sell_card({config={ref_table=card}})
     RE.Util.enqueue(function()
-        G.FUNCS.sell_card({config={ref_table=card}})
         RE.Util.await(function()
             return G.CONTROLLER.locks.selling_card ~= nil
         end, function()
@@ -65,8 +65,15 @@ end
 
 function RE.Hud.Protocol.sell_consumable(request, context, ok, err)
     local card = G.consumeables.cards[request.index + 1]
+    G.FUNCS.sell_card({config={ref_table=card}})
     RE.Util.enqueue(function()
-        G.FUNCS.sell_card({config={ref_table=card}})
+        RE.Util.await(function()
+            return G.CONTROLLER.locks.selling_card ~= nil
+        end, function()
+            RE.Util.enqueue(function()
+                ok(context_screen(context))
+            end)
+        end)
     end)
 end
 

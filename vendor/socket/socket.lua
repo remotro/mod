@@ -2,8 +2,8 @@
 
 -- Since threads run on a separate lua environment, we need to require
 -- the necessary modules again
-
 return [[
+
 local CONFIG_URL, CONFIG_PORT = ...
 
 require("love.filesystem")
@@ -71,7 +71,7 @@ local mainThreadMessageQueue = function()
 				if msg == "connect!" then
 					Networking.connect()
 				elseif msg == "disconnect!" then
-					Networking.CLient:close()
+					shutdown()
 				else
 					Networking.Client:send(msg .. "\n")
 				end
@@ -144,6 +144,19 @@ local networkPacketQueue = function()
 end
 local networkCoroutine = coroutine.create(networkPacketQueue)
 
+local function shutdown()
+	Networking.Client:close()
+
+	-- Connection closed, restart everything
+	isSocketClosed = true
+	retryCount = 0
+	isRetry = false
+
+	timerCoroutine = coroutine.create(timer)
+
+	networkToUiChannel:push("disconnected!")
+end
+
 -- Checks for network packets,
 -- then sends them to the main thread
 -- then advances timers
@@ -160,16 +173,7 @@ while true do
 		isRetry = true
 
 		if retryCount > keepAliveRetryCount then
-			Networking.Client:close()
-
-			-- Connection closed, restart everything
-			isSocketClosed = true
-			retryCount = 0
-			isRetry = false
-
-			timerCoroutine = coroutine.create(timer)
-
-			networkToUiChannel:push("disconnected!")
+			shutdown()
 		end
 
 		if isRetry then

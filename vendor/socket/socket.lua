@@ -2,6 +2,7 @@
 
 -- Since threads run on a separate lua environment, we need to require
 -- the necessary modules again
+
 return [[
 local CONFIG_URL, CONFIG_PORT = ...
 
@@ -69,6 +70,8 @@ local mainThreadMessageQueue = function()
 			if msg then
 				if msg == "connect!" then
 					Networking.connect()
+				elseif msg == "disconnect!" then
+					Networking.CLient:close()
 				else
 					Networking.Client:send(msg .. "\n")
 				end

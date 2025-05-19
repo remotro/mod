@@ -10,7 +10,7 @@ end
 
 function RE.Client.connected()
 	--Add a thing to check if connected to server
-	return true
+	return false
 end
 
 function RE.Client.connect()

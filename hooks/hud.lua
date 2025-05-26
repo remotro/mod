@@ -92,6 +92,10 @@ function RE.Hud.Protocol.use_consumable(request, context, ok, err)
     local card = G.consumeables.cards[request.index + 1]
     G.FUNCS.use_card({config={ref_table=card}})
     RE.Util.enqueue(function()
-        ok(context_screen(context))
+        if G.STATE == G.STATES.GAME_OVER then
+            ok({GameOver = {}})
+        else
+            ok({Used = context_screen(context)})
+        end
     end)
 end

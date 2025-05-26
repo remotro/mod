@@ -66,17 +66,16 @@ function Game:update(dt)
 				local context = string.match(request.kind, "^(.-)/hud/.*\z")
 				local action = string.match(request.kind, "^.*/hud/(.*)\z")
 				sendTraceMessage("hud request, context: " .. context .. " action: " .. action)
-				local responder = result_responder(context .. "/info")
 				if action == "jokers/sell" then
-					RE.Hud.Protocol.sell_joker(request.body, context, responder)
+					RE.Hud.Protocol.sell_joker(request.body, context, result_responder(context .. "/info"))
 				elseif action == "jokers/move" then
-					RE.Hud.Protocol.move_joker(request.body, context, responder)
+					RE.Hud.Protocol.move_joker(request.body, context, result_responder(context .. "/info"))
 				elseif action == "consumables/sell" then
-					RE.Hud.Protocol.sell_consumable(request.body, context, responder)
+					RE.Hud.Protocol.sell_consumable(request.body, context, result_responder(context .. "/info"))
 				elseif action == "consumables/move" then
-					RE.Hud.Protocol.move_consumable(request.body, context, responder)
+					RE.Hud.Protocol.move_consumable(request.body, context, result_responder(context .. "/info"))
 				elseif action == "consumables/use" then
-					RE.Hud.Protocol.use_consumable(request.body, context, responder)
+					RE.Hud.Protocol.use_consumable(request.body, context, result_responder(request.kind))
 				end
 			end
 		end

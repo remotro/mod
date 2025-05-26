@@ -96,9 +96,26 @@ function RE.Shop.Protocol.buy_booster(request, ok, err)
 		err("Not enough money")
 		return
 	end
+	sendTraceMessage("checking state: " .. G.STATE)
 	G.FUNCS.use_card({config={ref_table=pack}})
-	RE.Util.enqueue(function()
-		ok(RE.Shop.info())
+	sendTraceMessage("checking state: " .. G.STATE)
+	RE.Util.await(
+	function()
+		return SMODS.OPENED_BOOSTER ~= nil and G.pack_cards ~= nil
+	end,
+	function()
+		local kind = string.sub(SMODS.OPENED_BOOSTER.config.center.key,1,-3)
+		if string.find(kind, "arcana") then
+			ok({Arcana = RE.Boosters.arcana()})
+		elseif string.find(kind, "buffoon") then
+			ok({Buffoon = RE.Boosters.buffoon()})
+		elseif string.find(kind, "celestial") then
+			ok({Celestial = RE.Boosters.celestial()})
+		elseif string.find(kind, "spectral") then
+			ok({Spectral = RE.Boosters.spectral()})
+		elseif string.find(kind, "standard") then
+			ok({Standard = RE.Boosters.standard()})
+		end
 	end)
 end
 

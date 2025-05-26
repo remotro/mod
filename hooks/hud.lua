@@ -40,6 +40,10 @@ end
 
 function RE.Hud.Protocol.sell_joker(request, context, ok, err)
     local card = G.jokers.cards[request.index + 1]
+    if not card then
+        err("invalid sell index")
+        return
+    end
     G.FUNCS.sell_card({config={ref_table=card}})
     RE.Util.enqueue(function()
         RE.Util.await(function()
@@ -54,10 +58,17 @@ end
 
 function RE.Hud.Protocol.move_joker(request, context, ok, err)
     local from = request.from
+    if not G.jokers.cards[from + 1] then
+        err("invalid move from index")
+        return
+    end
     local to = request.to
+    if not G.jokers.cards[to + 1] then
+        err("invalid move to index")
+        return
+    end
     local tmp = G.jokers.cards[from + 1]
     table.remove(G.jokers.cards, from + 1)
-    table.insert(G.jokers.cards, to + 1, tmp)
     RE.Util.enqueue(function()
         ok(context_screen(context))
     end)
@@ -65,6 +76,10 @@ end
 
 function RE.Hud.Protocol.sell_consumable(request, context, ok, err)
     local card = G.consumeables.cards[request.index + 1]
+    if not card then
+        err("invalid sell index")
+        return
+    end
     G.FUNCS.sell_card({config={ref_table=card}})
     RE.Util.enqueue(function()
         RE.Util.await(function()
@@ -79,8 +94,15 @@ end
 
 function RE.Hud.Protocol.move_consumable(request, context, ok, err)
     local from = request.from
+    if not G.consumeables.cards[from + 1] then
+        err("invalid move from index")
+        return
+    end
     local to = request.to
-    local tmp = G.consumeables.cards[from + 1]
+    if not G.consumeables.cards[to + 1] then
+        err("invalid move to index")
+        return
+    end
     table.remove(G.consumeables.cards, from + 1)
     table.insert(G.consumeables.cards, to + 1, tmp)
     RE.Util.enqueue(function()
@@ -90,6 +112,10 @@ end
 
 function RE.Hud.Protocol.use_consumable(request, context, ok, err)
     local card = G.consumeables.cards[request.index + 1]
+    if not card then
+        err("invalid use index")
+        return
+    end
     G.FUNCS.use_card({config={ref_table=card}})
     RE.Util.enqueue(function()
         if G.STATE == G.STATES.GAME_OVER then

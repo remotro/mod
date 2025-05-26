@@ -1,10 +1,5 @@
 RE = SMODS.current_mod
 
-function RE.network_bootstrap()
-	RE.NETWORKING_THREAD = love.thread.newThread(RE.SOCKET)
-	RE.NETWORKING_THREAD:start(SMODS.Mods["Remotro"].config.server_url, SMODS.Mods["Remotro"].config.server_port)
-end
-
 function RE.load_re_file(file)
 	local chunk, err = SMODS.load_file(file, "Remotro")
 	if chunk then
@@ -20,25 +15,34 @@ function RE.load_re_file(file)
 	return nil
 end
 
-RE.SOCKET = RE.load_re_file("vendor/socket/socket.lua")
+function RE.load_re_dir(directory)
+	local files = NFS.getDirectoryItems(RE.path .. "/" .. directory)
+	local regular_files = {}
+
+	for _, filename in ipairs(files) do
+		local file_path = directory .. "/" .. filename
+		if file_path:match(".lua$") then
+			if filename:match("^_") then
+				MP.load_mp_file(file_path)
+			else
+				table.insert(regular_files, file_path)
+			end
+		end
+	end
+
+	for _, file_path in ipairs(regular_files) do
+		RE.load_re_file(file_path)
+	end
+end
 
 RE.JSON = RE.load_re_file("vendor/json/json.lua")
+RE.SOCKET = RE.load_re_file("vendor/socket/socket.lua")
 RE.load_re_file("net/client.lua")
 
-RE.load_re_file("hooks/util.lua")
-RE.load_re_file("hooks/deck.lua")
-RE.load_re_file("hooks/menu.lua")
-RE.load_re_file("hooks/play.lua")
-RE.load_re_file("hooks/blinds.lua")
-RE.load_re_file("hooks/screen.lua")
-RE.load_re_file("hooks/shop.lua")
-RE.load_re_file("hooks/overview.lua")
-RE.load_re_file("hooks/manager.lua")
-RE.load_re_file("hooks/jokers.lua")
-RE.load_re_file("hooks/consumables.lua")
+RE.NETWORKING_THREAD = love.thread.newThread(RE.SOCKET)
+RE.NETWORKING_THREAD:start(SMODS.Mods["Remotro"].config.server_url, SMODS.Mods["Remotro"].config.server_port)
 
-RE.load_re_file("ui/smods.lua")
-RE.load_re_file("ui/indicator.lua")
+RE.load_re_dir("hooks")
+RE.load_re_dir("ui")
 
-RE.network_bootstrap()
 RE.Client.connect()

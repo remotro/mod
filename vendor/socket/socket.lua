@@ -33,6 +33,7 @@ Networking = {}
 local isSocketClosed = true
 local networkToUiChannel = love.thread.getChannel("networkToUi")
 local uiToNetworkChannel = love.thread.getChannel("uiToNetwork")
+local statusChannel = love.thread.getChannel("status")
 
 function Networking.connect()
 	-- TODO: Check first if Networking.Client is not null
@@ -186,6 +187,8 @@ while true do
 			coroutine.resume(timerCoroutine, keepAliveRetryTimeout)
 		end
 	end
+	statusChannel:clear()
+	statusChannel:push(not isSocketClosed)
 
 	-- Sleeps for 200 milliseconds
 	socket.sleep(0.2)

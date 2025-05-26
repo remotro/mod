@@ -81,12 +81,6 @@ SMODS.Mods.Remotro.config_tab = function()
 					},
 				},
 			},
-			UIBox_button({
-				button = "remotro_reconnect",
-				label = RE.Client.connected() and {"Connected"} or {"Disconnected"},
-				scale = 0.5,
-				id = "reconnect"
-			})
 		}
 	}
 end

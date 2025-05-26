@@ -1,5 +1,7 @@
 function G.FUNCS.remotro_reconnect()
-	love.thread.getChannel("uiToNetwork"):push("disconnect!")
-	RE.network_bootstrap()
-	RE.Client.connect()
+	if RE.Client.connected() then
+		love.thread.getChannel("uiToNetwork"):push("disconnect!")
+	else
+		RE.Client.connect()
+	end
 end

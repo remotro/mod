@@ -72,7 +72,7 @@ local mainThreadMessageQueue = function()
 				if msg == "connect!" then
 					Networking.connect()
 				elseif msg == "disconnect!" then
-					shutdown()
+					disconnect()
 				else
 					Networking.Client:send(msg .. "\n")
 				end
@@ -130,6 +130,8 @@ local networkPacketQueue = function()
 					isRetry = false
 
 					timerCoroutine = coroutine.create(timer)
+					statusChannel:clear()
+					statusChannel:push(not isSocketClosed)
 					networkToUiChannel:push("disconnected!")
 				else
 					-- If there are no more packets, yield
@@ -145,7 +147,8 @@ local networkPacketQueue = function()
 end
 local networkCoroutine = coroutine.create(networkPacketQueue)
 
-local function shutdown()
+local function disconnect()
+
 	Networking.Client:close()
 
 	-- Connection closed, restart everything
@@ -155,6 +158,8 @@ local function shutdown()
 
 	timerCoroutine = coroutine.create(timer)
 
+	statusChannel:clear()
+	statusChannel:push(not isSocketClosed)
 	networkToUiChannel:push("disconnected!")
 end
 
@@ -174,7 +179,7 @@ while true do
 		isRetry = true
 
 		if retryCount > keepAliveRetryCount then
-			shutdown()
+			disconnect()
 		end
 
 		if isRetry then

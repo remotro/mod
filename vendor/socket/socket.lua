@@ -60,6 +60,21 @@ function Networking.connect()
 	Networking.Client:settimeout(0)
 end
 
+function Networking.disconnect()
+	Networking.Client:close()
+
+	-- Connection closed, restart everything
+	isSocketClosed = true
+	retryCount = 0
+	isRetry = false
+
+	timerCoroutine = coroutine.create(timer)
+
+	statusChannel:clear()
+	statusChannel:push(not isSocketClosed)
+	networkToUiChannel:push("disconnected!")
+end
+
 -- Check for messages from the main thread
 local mainThreadMessageQueue = function()
 	-- Executes a max of requestsPerCycle action requests
@@ -72,7 +87,7 @@ local mainThreadMessageQueue = function()
 				if msg == "connect!" then
 					Networking.connect()
 				elseif msg == "disconnect!" then
-					disconnect()
+					Networking.disconnect()
 				else
 					Networking.Client:send(msg .. "\n")
 				end
@@ -147,21 +162,6 @@ local networkPacketQueue = function()
 end
 local networkCoroutine = coroutine.create(networkPacketQueue)
 
-local function disconnect()
-
-	Networking.Client:close()
-
-	-- Connection closed, restart everything
-	isSocketClosed = true
-	retryCount = 0
-	isRetry = false
-
-	timerCoroutine = coroutine.create(timer)
-
-	statusChannel:clear()
-	statusChannel:push(not isSocketClosed)
-	networkToUiChannel:push("disconnected!")
-end
 
 -- Checks for network packets,
 -- then sends them to the main thread
@@ -179,7 +179,7 @@ while true do
 		isRetry = true
 
 		if retryCount > keepAliveRetryCount then
-			disconnect()
+			Networking.disconnect()
 		end
 
 		if isRetry then

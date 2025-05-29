@@ -62,14 +62,10 @@ end
 
 function Networking.disconnect()
 	Networking.Client:close()
-
 	-- Connection closed, restart everything
 	isSocketClosed = true
 	retryCount = 0
 	isRetry = false
-
-	timerCoroutine = coroutine.create(timer)
-
 	statusChannel:clear()
 	statusChannel:push(not isSocketClosed)
 	networkToUiChannel:push("disconnected!")

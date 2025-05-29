@@ -35,14 +35,17 @@ function RE.load_re_dir(directory)
 	end
 end
 
+function RE.net_thread_start()
+	RE.NETWORKING_THREAD = love.thread.newThread(RE.SOCKET)
+	RE.NETWORKING_THREAD:start(SMODS.Mods["Remotro"].config.server_url, SMODS.Mods["Remotro"].config.server_port)
+end
+
 RE.JSON = RE.load_re_file("vendor/json/json.lua")
 RE.SOCKET = RE.load_re_file("vendor/socket/socket.lua")
 RE.load_re_file("net/client.lua")
 
-RE.NETWORKING_THREAD = love.thread.newThread(RE.SOCKET)
-RE.NETWORKING_THREAD:start(SMODS.Mods["Remotro"].config.server_url, SMODS.Mods["Remotro"].config.server_port)
-
 RE.load_re_dir("hooks")
 RE.load_re_dir("ui")
 
+RE.net_thread_start()
 RE.Client.connect()

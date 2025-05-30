@@ -45,7 +45,7 @@ function RE.Shop.Protocol.buy_main(request, ok, err)
 		err("Cannot do this action, No space")
 	end
 	if (card.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (card.cost > 0) then
-		err("Not enough money")
+		err("Cannot do this action, Not enough money")
 		return
 	end
 	G.FUNCS.buy_from_shop({config={ref_table=card}})
@@ -61,7 +61,7 @@ function RE.Shop.Protocol.buy_and_use(request, ok, err)
 	local card = G.shop_jokers.cards[request.index]
 	card.config.id = 'buy_and_use'
 	if (card.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (card.cost > 0) then
-		err("Not enough money")
+		err("Cannot do this action, Not enough money")
 		return
 	end
 	G.FUNCS.buy_from_shop({config={ref_table=card}})
@@ -75,7 +75,7 @@ function RE.Shop.Protocol.buy_voucher(request, ok, err)
 	end
 	local voucher = G.shop_vouchers.cards[request.index]
 	if (voucher.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (voucher.cost > 0) then
-		err("Not enough money")
+		err("Cannot do this action, Not enough money")
 		return
 	end
 	G.FUNCS.use_card({config={ref_table=voucher}})
@@ -91,7 +91,7 @@ function RE.Shop.Protocol.buy_booster(request, ok, err)
 	end
 	local pack = G.shop_booster.cards[request.index]
 	if (pack.cost > G.GAME.dollars - G.GAME.bankrupt_at) and (pack.cost > 0) then
-		err("Not enough money")
+		err("Cannot do this action, Not enough money")
 		return
 	end
 	G.FUNCS.use_card({config={ref_table=pack}})
@@ -104,7 +104,7 @@ function RE.Shop.Protocol.reroll(request, ok, err)
 		return
 	end
 	if ((G.GAME.dollars-G.GAME.bankrupt_at) - G.GAME.current_round.reroll_cost < 0) and G.GAME.current_round.reroll_cost ~= 0 then
-		err("Not enough money")
+		err("Cannot do this action, Not enough money")
 		return
 	end
 	G.FUNCS.reroll_shop()

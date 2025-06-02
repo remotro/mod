@@ -135,15 +135,7 @@ local networkPacketQueue = function()
 					-- For now, we just send the string as is to the main thread
 					networkToUiChannel:push(data)
 				elseif error == "close" then
-					-- Handle connection closed gracefully
-					isSocketClosed = true
-					retryCount = 0
-					isRetry = false
-
-					timerCoroutine = coroutine.create(timer)
-					statusChannel:clear()
-					statusChannel:push(not isSocketClosed)
-					networkToUiChannel:push("disconnected!")
+					Networking.disconnect()
 				else
 					-- If there are no more packets, yield
 					coroutine.yield()

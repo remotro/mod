@@ -45,20 +45,38 @@ function Game:update(dt)
 				RE.Play.Protocol.discard(request.body, result_responder("play/discard/result"))
 
 			elseif request.kind == "shop/buymain" then
-				RE.Shop.Protocol.buy_main(request.body, result_responder("shop/buymain/result"))
+				RE.Shop.Protocol.buy_main(request.body, result_responder("shop/info"))
 			elseif request.kind == "shop/buyuse" then
-				RE.Shop.Protocol.buy_and_use(request.body, result_responder("shop/buyuse/result"))
+				RE.Shop.Protocol.buy_and_use(request.body, result_responder("shop/info"))
 			elseif request.kind == "shop/buyvoucher" then
-				RE.Shop.Protocol.buy_voucher(request.body, result_responder("shop/buyvoucher/result"))
+				RE.Shop.Protocol.buy_voucher(request.body, result_responder("shop/info"))
 			elseif request.kind == "shop/buybooster" then
-				RE.Shop.Protocol.buy_booster(request.body, result_responder("shop/buybooster/result"))
+				RE.Shop.Protocol.buy_booster(request.body, result_responder("shop/info"))
 			elseif request.kind == "shop/reroll" then
-				RE.Shop.Protocol.reroll(request.body, result_responder("shop/reroll/result"))
+				RE.Shop.Protocol.reroll(request.body, result_responder("shop/info"))
 			elseif request.kind == "shop/continue" then
-				RE.Shop.Protocol.continue(request.body, result_responder("shop/continue/result"))
+				RE.Shop.Protocol.continue(request.body, result_responder("blind_select/info"))
         
 			elseif request.kind == "overview/cash_out" then
 				RE.Overview.Protocol.cash_out(result_responder("shop/info"))
+			
+			-- hud actions are odd, basically they are structured as <context>/hud/<action>,
+			-- so we have to check for the suffix first and then extract the context and action
+			elseif string.match(request.kind, ".*/hud/.*\z") then
+				local context = string.match(request.kind, "^(.-)/hud/.*\z")
+				local action = string.match(request.kind, "^.*/hud/(.*)\z")
+				sendTraceMessage("hud request, context: " .. context .. " action: " .. action)
+				if action == "jokers/sell" then
+					RE.Hud.Protocol.sell_joker(request.body, context, result_responder(context .. "/info"))
+				elseif action == "jokers/move" then
+					RE.Hud.Protocol.move_joker(request.body, context, result_responder(context .. "/info"))
+				elseif action == "consumables/sell" then
+					RE.Hud.Protocol.sell_consumable(request.body, context, result_responder(context .. "/info"))
+				elseif action == "consumables/move" then
+					RE.Hud.Protocol.move_consumable(request.body, context, result_responder(context .. "/info"))
+				elseif action == "consumables/use" then
+					RE.Hud.Protocol.use_consumable(request.body, context, result_responder(request.kind))
+				end
 			end
 		end
 	until not request

@@ -27,7 +27,7 @@ function RE.Shop.info()
 		table.insert(vouchers_row, json)
 	end
 	for k, booster in ipairs(boosters) do
-		local json = { kind = string.sub(booster.config.center.key,1,-3), price = booster.cost }
+		local json = RE.Boosters.booster(booster)
 		table.insert(boosters_row, json)
 	end
 	return { hud = RE.Hud.info(), main = main_row , vouchers = vouchers_row, boosters = boosters_row }
@@ -97,8 +97,12 @@ function RE.Shop.Protocol.buy_booster(request, ok, err)
 		return
 	end
 	G.FUNCS.use_card({config={ref_table=pack}})
-	RE.Util.enqueue(function()
-		ok(RE.Shop.info())
+	RE.Util.await(
+	function()
+		return RE.Boosters.info() ~= nil
+	end,
+	function()
+		ok(RE.Boosters.info())
 	end)
 end
 

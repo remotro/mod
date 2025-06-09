@@ -4,7 +4,7 @@ RE.Overview.Protocol = {}
 local function translate_config(config)
     local kind
     if string.find(config.name, "^joker") then
-        kind = { Joker = config.card.ability.name }
+        kind = { Joker = RE.Jokers.joker(config.card).kind }
     elseif string.find(config.name, "^tag") then
         kind = { Tag = config.tag }
     elseif string.find(config.name, "^blind") then

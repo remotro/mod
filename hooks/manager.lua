@@ -51,7 +51,7 @@ function Game:update(dt)
 			elseif request.kind == "shop/buyvoucher" then
 				RE.Shop.Protocol.buy_voucher(request.body, result_responder("shop/info"))
 			elseif request.kind == "shop/buybooster" then
-				RE.Shop.Protocol.buy_booster(request.body, result_responder("shop/info"))
+				RE.Shop.Protocol.buy_booster(request.body, result_responder("shop/bought_booster"))
 			elseif request.kind == "shop/reroll" then
 				RE.Shop.Protocol.reroll(request.body, result_responder("shop/info"))
 			elseif request.kind == "shop/continue" then
@@ -59,9 +59,20 @@ function Game:update(dt)
         
 			elseif request.kind == "overview/cash_out" then
 				RE.Overview.Protocol.cash_out(result_responder("shop/info"))
-			
-			-- hud actions are odd, basically they are structured as <context>/hud/<action>,
-			-- so we have to check for the suffix first and then extract the context and action
+				
+			-- booster actions structured like <context>/open/<pack>/action
+			elseif string.match(request.kind, ".*/open/.*/.*\z") then
+				local context = string.match(request.kind, "^(.-)/open/.*\z")
+				local pack = string.match(request.kind, "^.*/open/(.-)/.*\z")
+				local action = string.match(request.kind, "^.*/open/.*/(.+)\z")
+				if action == "skip" then
+					RE.Boosters.Protocol.skip(request.body, context, pack, result_responder(context .. "/info"))
+				elseif action == "click" then
+					RE.Boosters.Protocol.click(request.body, context, pack, result_responder(context .. "/open/" .. pack .. "/info"))
+				elseif action == "select" then
+					RE.Boosters.Protocol.select(request.body, context, pack, result_responder(request.kind))
+				end
+			-- hud actions structured as <context>/hud/<action>
 			elseif string.match(request.kind, ".*/hud/.*\z") then
 				local context = string.match(request.kind, "^(.-)/hud/.*\z")
 				local action = string.match(request.kind, "^.*/hud/(.*)\z")

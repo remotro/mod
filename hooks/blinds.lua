@@ -39,14 +39,11 @@ function RE.Blinds.choice(id)
     end
 end
 
-function RE.Blinds.info()
+function RE.Blinds.choices()
     return {
-        hud = RE.Hud.info(),
-        blinds = {
-            small = RE.Blinds.choice("Small"),
-            big = RE.Blinds.choice("Big"),
-            boss = RE.Blinds.choice("Boss"),
-        }
+        small = RE.Blinds.choice("Small"),
+        big = RE.Blinds.choice("Big"),
+        boss = RE.Blinds.choice("Boss"),
     }
 end
 
@@ -78,6 +75,6 @@ function RE.Blinds.Protocol.skip_blind(request, ok, err)
 	end
 	G.FUNCS.skip_blind(get_blind_choice_widget())
     RE.Screen.await(G.STATES.BLIND_SELECT, function()
-        ok(RE.Blinds.info())
+        ok(RE.Blinds.choices())
     end)
 end

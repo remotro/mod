@@ -23,7 +23,6 @@ RE.JSON = RE.load_re_file("vendor/json/json.lua")
 RE.load_re_file("net/client.lua")
 
 RE.load_re_file("hooks/util.lua")
-RE.load_re_file("hooks/hud.lua")
 RE.load_re_file("hooks/deck.lua")
 RE.load_re_file("hooks/menu.lua")
 RE.load_re_file("hooks/play.lua")

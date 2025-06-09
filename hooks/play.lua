@@ -2,6 +2,10 @@ RE.Play = {}
 RE.Play.Protocol = {}
 
 function RE.Play.info()
+    local blind_status = G.GAME.current_round
+	local hands = blind_status.hands_left
+	local discards = blind_status.discards_left
+	local money = G.GAME.dollars
 	local score = G.GAME.chips
 
     local hand = G.hand.cards
@@ -20,7 +24,9 @@ function RE.Play.info()
 		hand = json_hand,
 		current_blind = RE.Blinds.current(),
 		score = score,
-		hud = RE.Hud.info()
+		hands = hands,
+		discards = discards,
+		money = money
 	}
 end
 

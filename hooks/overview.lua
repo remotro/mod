@@ -48,7 +48,7 @@ function RE.Overview.round(cb)
                 total_earned = total_earned + earning.value
             end
             
-            cb({ hud = RE.Hud.info(), earnings = earnings, total_earned = total_earned })
+            cb({ earnings = earnings, total_earned = total_earned })
         end
     )
 end
@@ -72,7 +72,7 @@ function RE.Overview.Protocol.cash_out(ok, err)
                 if new_state == G.STATES.SHOP then
 					RE.Util.await(
 						function()
-							return G.shop_jokers ~= nil and #G.shop_jokers.cards > 0 and G.shop_vouchers ~= nil and #G.shop_vouchers.cards > 0 and G.shop_booster ~= nil and #G.shop_booster.cards > 0
+							return G.shop_jokers ~= nil and G.shop_vouchers ~= nil and G.shop_booster ~= nil
 						end,
 						function(res)
 							ok(RE.Shop.info())

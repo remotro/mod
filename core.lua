@@ -43,9 +43,9 @@ end
 RE.JSON = RE.load_re_file("vendor/json/json.lua")
 RE.SOCKET = RE.load_re_file("vendor/socket/socket.lua")
 RE.load_re_file("net/client.lua")
+RE.load_re_file("ui/ui.lua")
 
 RE.load_re_dir("hooks")
-RE.load_re_dir("ui")
 
 RE.net_thread_start()
 RE.Client.connect()

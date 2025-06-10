@@ -55,7 +55,7 @@ function RE.Hud.info()
         consumables = consumables,
         run_info = {
             poker_hands = poker_hands,
-            current_blinds = {
+            blinds = {
                 small = RE.Blinds.choice("Small"),
                 big = RE.Blinds.choice("Big"),
                 boss = RE.Blinds.choice("Boss"),

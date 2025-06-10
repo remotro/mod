@@ -18,12 +18,27 @@ function RE.Play.info()
     end
     local poker_hand = nil
     if #G.hand.highlighted > 0 then
-        local kind, _, _, hand_info, _ = G.FUNCS.get_poker_hand_info(G.hand.highlighted)
+        local evaluated_hand = evaluate_poker_hand(G.hand.highlighted)
+        local kind = nil
+        local hand = nil
+        if next(evaluated_hand["Flush Five"]) then kind = "Flush Five"; hand = G.GAME.hands["Flush Five"]
+        elseif next(evaluated_hand["Flush House"]) then kind = "Flush House"; hand = G.GAME.hands["Flush House"]
+        elseif next(evaluated_hand["Five of a Kind"]) then kind = "Five of a Kind"; hand = G.GAME.hands["Five of a Kind"]
+        elseif next(evaluated_hand["Straight Flush"]) then kind = "Straight Flush"; hand = G.GAME.hands["Straight Flush"]
+        elseif next(evaluated_hand["Four of a Kind"]) then kind = "Four of a Kind"; hand = G.GAME.hands["Four of a Kind"]
+        elseif next(evaluated_hand["Full House"]) then kind = "Full House"; hand = G.GAME.hands["Full House"]
+        elseif next(evaluated_hand["Flush"]) then kind = "Flush"; hand = G.GAME.hands["Flush"]
+        elseif next(evaluated_hand["Straight"]) then kind = "Straight"; hand = G.GAME.hands["Straight"]
+        elseif next(evaluated_hand["Three of a Kind"]) then kind = "Three of a Kind"; hand = G.GAME.hands["Three of a Kind"]
+        elseif next(evaluated_hand["Two Pair"]) then kind = "Two Pair"; hand = G.GAME.hands["Two Pair"]
+        elseif next(evaluated_hand["Pair"]) then kind = "Pair"; hand = G.GAME.hands["Pair"]
+        elseif next(evaluated_hand["High Card"]) then kind = "High Card"; hand = G.GAME.hands["High Card"] end
+    
         poker_hand = {
             kind = kind,
-            level = hand_info.level,
-            mult = hand_info.mult,
-            chips = hand_info.chips
+            level = hand.level,
+            mult = hand.mult,
+            chips = hand.chips
         }
     end
     return { 
@@ -71,11 +86,6 @@ function RE.Play.Protocol.play(request, ok, err)
         err("no cards highlighted")
         return
     end
-
-    G.GAME.chips = G.GAME.blind.chips
-    G.STATE = G.STATES.HAND_PLAYED
-    G.STATE_COMPLETE = true
-    end_round()
 
     RE.Screen.await({G.STATES.SELECTING_HAND, G.STATES.ROUND_EVAL, G.STATES.GAME_OVER}, function(new_state)
         if new_state == G.STATES.SELECTING_HAND then

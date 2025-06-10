@@ -19,6 +19,10 @@ function RE.Hud.info()
 	local money = G.GAME.dollars
     local round = G.GAME.round
     local ante = G.GAME.round_resets.ante
+	local tags = {}
+	for _, tag in pairs(G.GAME.tags) do
+		table.insert(tags, tag.key)
+	end
     local jokers = {}
     for _, card in pairs(G.jokers.cards) do
         table.insert(jokers, RE.Jokers.joker(card))
@@ -61,6 +65,7 @@ function RE.Hud.info()
                 boss = RE.Blinds.choice("Boss"),
             },
             vouchers_redeemed = vouchers_redeemed,
+			tags = tags,
             stake = G.GAME.stake,
         }
     }

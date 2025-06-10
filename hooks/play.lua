@@ -16,11 +16,22 @@ function RE.Play.info()
         end
         table.insert(json_hand, json)
     end
+    local poker_hand = nil
+    if #G.hand.highlighted > 0 then
+        local kind, _, _, hand_info, _ = G.FUNCS.get_poker_hand_info(G.hand.highlighted)
+        poker_hand = {
+            kind = kind,
+            level = hand_info.level,
+            mult = hand_info.mult,
+            chips = hand_info.chips
+        }
+    end
     return { 
 		hand = json_hand,
 		current_blind = RE.Blinds.current(),
 		score = score,
-		hud = RE.Hud.info()
+        poker_hand = poker_hand,
+		hud = RE.Hud.info(),
 	}
 end
 

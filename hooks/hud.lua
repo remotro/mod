@@ -27,6 +27,24 @@ function RE.Hud.info()
     for _, card in pairs(G.consumeables.cards) do
         table.insert(consumables, RE.Consumables.consumable(card))
     end
+    local poker_hands = {}
+    for kind, poker_hand in pairs(G.GAME.hands) do
+        -- for the field we need to lowercase and replace spaces with underscores
+        local transformed_kind = kind:lower():gsub(" ", "_")
+        poker_hands[transformed_kind] = {
+            played = poker_hand.played,
+            hand = {
+                kind = kind,
+                level = poker_hand.level,
+                chips = poker_hand.chips,
+                mult = poker_hand.mult,
+            }
+        }
+    end
+    local vouchers_redeemed = {}
+    for voucher, _ in pairs(G.GAME.used_vouchers) do
+        table.insert(vouchers_redeemed, voucher)
+    end
     return {
         hands = hands,
 		discards = discards,
@@ -34,7 +52,17 @@ function RE.Hud.info()
         round = round,
         ante = ante,
         jokers = jokers,
-        consumables = consumables
+        consumables = consumables,
+        run_info = {
+            poker_hands = poker_hands,
+            current_blinds = {
+                small = RE.Blinds.choice("Small"),
+                big = RE.Blinds.choice("Big"),
+                boss = RE.Blinds.choice("Boss"),
+            },
+            vouchers_redeemed = vouchers_redeemed,
+            stake = G.GAME.stake,
+        }
     }
 end
 

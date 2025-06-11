@@ -106,6 +106,16 @@ function RE.Jokers.joker(card)
 	elseif key == "j_yorick" then
 		result.xmult = card.config.extra.Xmult
 	end
+
+	if card.ability.perishable then
+		result.lifespan = { Perishable = { rounds_left = card.ability.perish_tally } }
+	elseif card.ability.eternal then
+		result.lifespan = "Eternal"
+	else
+		result.lifespan = "Normal"
+	end
+
+	result.rental = card.ability.rental ~= nil
 	
 	return result
 end

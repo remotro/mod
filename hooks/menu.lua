@@ -27,3 +27,14 @@ function RE.Menu.Protocol.start_run(request, ok, err)
         ok(RE.Blinds.info())
     end)
 end
+
+function RE.Menu.Protocol.continue_run(ok, err)
+    if G.STATE == G.STATES.MENU then
+        err("cannot do this action, must be in menu (" .. G.STATES.MENU .. ") but in " .. G.STATE)
+    end
+
+    G.FUNCS.start_run(e, { savetext = G.SAVED_GAME });
+    RE.Util.enqueue(function()
+        ok(RE.Screen.Protocol.get(ok, err))
+    end)
+end

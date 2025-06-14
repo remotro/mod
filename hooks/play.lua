@@ -5,6 +5,7 @@ function RE.Play.info()
 	local score = G.GAME.chips
 
     local hand = G.hand.cards
+	local hand_size = G.hand.config.card_limit
     local json_hand = {}
     for i, card in ipairs(hand) do
         local base_json = RE.Deck.playing_card(card)
@@ -18,6 +19,7 @@ function RE.Play.info()
     end
     return { 
 		hand = json_hand,
+		hand_size = hand_size,
 		current_blind = RE.Blinds.current(),
 		score = score,
 		hud = RE.Hud.info()

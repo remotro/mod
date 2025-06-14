@@ -1,6 +1,23 @@
 RE.Menu = {}
 RE.Menu.Protocol = {}
 
+function RE.Menu.info()
+    if not G.SAVED_GAME then
+        return {}
+    end
+ 
+    return {
+        saved_run = {
+            deck = G.SAVED_GAME.GAME.selected_back_key,
+            stake = G.SAVED_GAME.GAME.stake,
+            best_hand = G.SAVED_GAME.GAME.round_scores.hand,
+            round = G.SAVED_GAME.GAME.round,
+            ante = G.SAVED_GAME.GAME.round_resets.ante,
+            money = G.SAVED_GAME.GAME.dollars,
+        }
+    }
+end
+
 function RE.Menu.Protocol.start_run(request, ok, err)
     if G.STATE ~= G.STATES.MENU then
         err("cannot do this action, must be in menu (" .. G.STATES.MENU .. ") but in " .. G.STATE)

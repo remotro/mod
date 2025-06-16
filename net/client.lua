@@ -8,6 +8,11 @@ local function recv(msg)
     return love.thread.getChannel("networkToUi"):pop()
 end
 
+function RE.Client.connected()
+	--Add a thing to check if connected to server
+	return love.thread.getChannel("status"):peek()
+end
+
 function RE.Client.connect()
     send("connect!")
 end
@@ -20,14 +25,11 @@ function RE.Client.request()
             local exclamationIndex = string.find(msg, "!")
             local kind = nil
             local body = nil
-            
-            
             if exclamationIndex then
                 kind = string.sub(msg, 1, exclamationIndex - 1)
                 body = string.sub(msg, exclamationIndex + 1)
                 if kind ~= "ping" then
                     sendDebugMessage("Received " .. kind .. " " .. body)
-
                     if body ~= "" then
                         body = RE.JSON.decode(body)
                     else

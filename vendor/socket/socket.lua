@@ -3,6 +3,7 @@
 -- Since threads run on a separate lua environment, we need to require
 -- the necessary modules again
 return [[
+
 local CONFIG_URL, CONFIG_PORT = ...
 
 require("love.filesystem")
@@ -32,6 +33,7 @@ Networking = {}
 local isSocketClosed = true
 local networkToUiChannel = love.thread.getChannel("networkToUi")
 local uiToNetworkChannel = love.thread.getChannel("uiToNetwork")
+local statusChannel = love.thread.getChannel("status")
 
 function Networking.connect()
 	-- TODO: Check first if Networking.Client is not null
@@ -58,6 +60,17 @@ function Networking.connect()
 	Networking.Client:settimeout(0)
 end
 
+function Networking.disconnect()
+	Networking.Client:close()
+	-- Connection closed, restart everything
+	isSocketClosed = true
+	retryCount = 0
+	isRetry = false
+	statusChannel:clear()
+	statusChannel:push(not isSocketClosed)
+	networkToUiChannel:push("disconnected!")
+end
+
 -- Check for messages from the main thread
 local mainThreadMessageQueue = function()
 	-- Executes a max of requestsPerCycle action requests
@@ -69,6 +82,8 @@ local mainThreadMessageQueue = function()
 			if msg then
 				if msg == "connect!" then
 					Networking.connect()
+				elseif msg == "disconnect!" then
+					Networking.disconnect()
 				else
 					Networking.Client:send(msg .. "\n")
 				end
@@ -120,13 +135,7 @@ local networkPacketQueue = function()
 					-- For now, we just send the string as is to the main thread
 					networkToUiChannel:push(data)
 				elseif error == "close" then
-					-- Handle connection closed gracefully
-					isSocketClosed = true
-					retryCount = 0
-					isRetry = false
-
-					timerCoroutine = coroutine.create(timer)
-					networkToUiChannel:push("disconnected!")
+					Networking.disconnect()
 				else
 					-- If there are no more packets, yield
 					coroutine.yield()
@@ -140,6 +149,7 @@ local networkPacketQueue = function()
 	end
 end
 local networkCoroutine = coroutine.create(networkPacketQueue)
+
 
 -- Checks for network packets,
 -- then sends them to the main thread
@@ -157,16 +167,7 @@ while true do
 		isRetry = true
 
 		if retryCount > keepAliveRetryCount then
-			Networking.Client:close()
-
-			-- Connection closed, restart everything
-			isSocketClosed = true
-			retryCount = 0
-			isRetry = false
-
-			timerCoroutine = coroutine.create(timer)
-
-			networkToUiChannel:push("disconnected!")
+			Networking.disconnect()
 		end
 
 		if isRetry then
@@ -179,6 +180,8 @@ while true do
 			coroutine.resume(timerCoroutine, keepAliveRetryTimeout)
 		end
 	end
+	statusChannel:clear()
+	statusChannel:push(not isSocketClosed)
 
 	-- Sleeps for 200 milliseconds
 	socket.sleep(0.2)

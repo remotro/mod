@@ -7,7 +7,7 @@ function RE.Deck.playing_card(card)
     end
     local enhancement = nil;
     if card.ability.name ~= "Default Base" then
-        enhancement = "m_" .. string.lower(card.ability.name);
+        enhancement = "m_" .. string.lower(card.ability.name:match("%w+"));
     end
     local rank = card.base.value;
     local suit = card.base.suit;

@@ -77,7 +77,17 @@ function RE.Blinds.Protocol.skip_blind(request, ok, err)
 		return
 	end
 	G.FUNCS.skip_blind(get_blind_choice_widget())
-    RE.Screen.await(G.STATES.BLIND_SELECT, function()
-        ok(RE.Blinds.info())
+    RE.Blinds.skip_result(ok)
+end
+
+function RE.Blinds.skip_result(cb)
+    RE.Util.await(function ()
+        return G.STATE == G.STATES.BLIND_SELECT or RE.Boosters.info() ~= nil
+    end, function()
+        if G.STATE == G.STATES.BLIND_SELECT then
+            cb(RE.Blinds.info())
+        else
+            cb(RE.Boosters.info())
+        end
     end)
 end

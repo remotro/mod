@@ -80,23 +80,25 @@ local function standard_info()
     return open_info_with_hand(RE.Deck.playing_card)
 end
 
-local function pack_info(context)
-    if context == "arcana" then
+local function pack_info(ret)
+    if ret == "arcana" then
         return arcana_info()
-    elseif context == "buffoon" then
+    elseif ret == "buffoon" then
         return buffoon_info()
-    elseif context == "celestial" then
+    elseif ret == "celestial" then
         return celestial_info()
-    elseif context == "spectral" then
+    elseif ret == "spectral" then
         return spectral_info()
-    elseif context == "standard" then
+    elseif ret == "standard" then
         return standard_info()
     end
 end
 
-local function context_info(context)
-    if context == "shop" then
-        return RE.Shop.info()
+local function ret_info(ret, cb)
+    if ret == "shop" then
+        cb(RE.Shop.info())
+    elseif ret == "skip" then
+        RE.Blinds.skip_result(cb)
     end
 end
 
@@ -124,18 +126,18 @@ function RE.Boosters.info()
     end
 end
 
-function RE.Boosters.Protocol.skip(request, context, pack, ok, err)
+function RE.Boosters.Protocol.skip(request, ret, pack, ok, err)
     if RE.Boosters.info() == nil then
         err("Cannot do this action, must be in booster state but in state " .. G.STATE)
         return
     end
     G.FUNCS.skip_booster(nil)
     RE.Util.enqueue(function()
-        ok(context_info(context))
+        ok(ret_info(ret))
     end)
 end
 
-function RE.Boosters.Protocol.select(request, context, pack, ok, err)
+function RE.Boosters.Protocol.select(request, ret, pack, ok, err)
     if RE.Boosters.info() == nil then
         err("Cannot do this action, must be in booster state but in state " .. G.STATE)
         return
@@ -145,12 +147,12 @@ function RE.Boosters.Protocol.select(request, context, pack, ok, err)
         if RE.Boosters.info() then
             ok({Again = pack_info(pack)})
         else
-            ok({Again = context_info(context)})
+            ok({Again = ret_info(ret)})
         end
     end)
 end
 
-function RE.Boosters.Protocol.click(request, context, pack, ok, err)
+function RE.Boosters.Protocol.click(request, ret, pack, ok, err)
     if RE.Boosters.info() == nil then
         err("Cannot do this action, must be in booster state but in state " .. G.STATE)
         return

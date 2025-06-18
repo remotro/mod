@@ -64,13 +64,13 @@ function Game:update(dt)
 				
 			-- booster actions structured like <context>/open/<pack>/action
 			elseif string.match(request.kind, ".*/open/.*/.*\z") then
-				local context = string.match(request.kind, "^(.-)/open/.*\z")
+				local ret = string.match(request.kind, "^(.-)/open/.*\z")
 				local pack = string.match(request.kind, "^.*/open/(.-)/.*\z")
 				local action = string.match(request.kind, "^.*/open/.*/(.+)\z")
 				if action == "skip" then
-					RE.Boosters.Protocol.skip(request.body, context, pack, result_responder(context .. "/info"))
+					RE.Boosters.Protocol.skip(request.body, context, pack, result_responder(ret .. "/info"))
 				elseif action == "click" then
-					RE.Boosters.Protocol.click(request.body, context, pack, result_responder(context .. "/open/" .. pack .. "/info"))
+					RE.Boosters.Protocol.click(request.body, context, pack, result_responder(ret .. "/open/" .. pack .. "/info"))
 				elseif action == "select" then
 					RE.Boosters.Protocol.select(request.body, context, pack, result_responder(request.kind))
 				end
@@ -88,7 +88,7 @@ function Game:update(dt)
 				elseif action == "consumables/move" then
 					RE.Hud.Protocol.move_consumable(request.body, context, result_responder(context .. "/info"))
 				elseif action == "consumables/use" then
-					RE.Hud.Protocol.use_consumable(request.body, context, result_responder(request.kind))
+					RE.Hud.Protocol.use_consumable(request.body, context, result_responder(context .. "/info"))
 				end
 			end
 		end

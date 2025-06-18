@@ -10,6 +10,12 @@ local function context_screen(context)
         return RE.Play.info()
     elseif context == "shop" then
         return RE.Shop.info()
+    elseif context == "blind_select" then
+        return RE.Blinds.info()
+    elseif context == "play" then
+        return RE.Play.info()
+    elseif context == "shop" then
+        return RE.Shop.info()
     end
 end
 
@@ -53,6 +59,7 @@ function RE.Hud.info()
         ante = ante,
         jokers = jokers,
         consumables = consumables,
+        tags = G.GAME.tags,
         run_info = {
             poker_hands = poker_hands,
             blinds = {
@@ -146,10 +153,6 @@ function RE.Hud.Protocol.use_consumable(request, context, ok, err)
     end
     G.FUNCS.use_card({config={ref_table=card}})
     RE.Util.enqueue(function()
-        if G.STATE == G.STATES.GAME_OVER then
-            ok({GameOver = {}})
-        else
-            ok({Used = context_screen(context)})
-        end
+        ok(context_screen(context))
     end)
 end

@@ -49,7 +49,12 @@ function RE.Jokers.joker(card)
 	elseif key == "j_cloud_9" then
 		result.earnings = card.config.extra
 	elseif key == "j_rocket" then
-		result.earnings = card.config.extra.dollars
+		if card.config.extra then
+			result.earnings = card.config.extra.dollars
+		else
+			-- Starting value before joker is bought
+			result.earnings = 1
+		end
 	elseif key == "j_obelisk" then
 		result.xmult = card.config.extra.Xmult
 	elseif key == "j_turtle_bean" then

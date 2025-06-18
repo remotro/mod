@@ -3,18 +3,20 @@ RE.Menu.Protocol = {}
 
 function RE.Menu.info()
     if not G.SAVED_GAME then
-        return {}
+        sendTraceMessage("No saved game")
+        return { saved_run = nil, unrelated = "required because lua json + serde json hate eachother and are subtly incompatible" }
     end
  
+    sendTraceMessage("Saved game")
     return {
-        saved_run = {
+        saved_run = { Some = {
             deck = G.SAVED_GAME.GAME.selected_back_key,
             stake = G.SAVED_GAME.GAME.stake,
             best_hand = G.SAVED_GAME.GAME.round_scores.hand,
             round = G.SAVED_GAME.GAME.round,
             ante = G.SAVED_GAME.GAME.round_resets.ante,
             money = G.SAVED_GAME.GAME.dollars,
-        }
+        } }
     }
 end
 

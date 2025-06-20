@@ -102,8 +102,17 @@ local function ret_info(ret, cb)
     end
 end
 
+local function is_ret(ret)
+    if ret == "shop" then
+        return G.STATE == G.STATES.SHOP
+    elseif ret == "skip" then
+        return G.STATE == G.STATES.BLIND_SELECT
+    end
+end
+
+
 function RE.Boosters.info()
-    if SMODS.OPENED_BOOSTER == nil or G.pack_cards == nil then
+    if not SMODS.OPENED_BOOSTER or not G.pack_cards or not G.pack_cards.cards then
         return nil
     end
     local booster = RE.Boosters.booster(SMODS.OPENED_BOOSTER)
@@ -138,18 +147,40 @@ function RE.Boosters.Protocol.skip(request, ret, pack, ok, err)
 end
 
 function RE.Boosters.Protocol.select(request, ret, pack, ok, err)
-    if RE.Boosters.info() == nil then
+    local info = RE.Boosters.info()
+    if not info then
         err("Cannot do this action, must be in booster state but in state " .. G.STATE)
         return
     end
     G.FUNCS.use_card({config = {ref_table = G.pack_cards.cards[request.index + 1]}})
-    RE.Util.enqueue(function()
-        if RE.Boosters.info() then
+    if G.GAME.pack_choices == 1 then
+        RE.Util.await(
+            function()
+                sendTraceMessage(ret)
+                if G.STATE == G.STATES.SHOP then
+                    sendTraceMessage("WHY DONT YOU JUST WORK?!!?!")
+                else
+                    sendTraceMessage("UN. USABLE.")
+                end
+                if is_ret(ret) then
+                    sendTraceMessage("YOU ACTUAL IDIOT. WORK.")
+                else
+                    sendTraceMessage("WHY?" .. ret)
+                end
+
+                return is_ret(ret)
+            end,
+            function()
+                ret_info(ret, function (info)
+                    ok({Done = info})
+                end)
+            end
+        )
+    else
+        RE.Util.enqueue(function()
             ok({Again = pack_info(pack)})
-        else
-            ok({Again = ret_info(ret)})
-        end
-    end)
+        end)
+    end
 end
 
 function RE.Boosters.Protocol.click(request, ret, pack, ok, err)

@@ -10,6 +10,12 @@ function RE.Screen.Protocol.get(ok, err)
         ok({Play = RE.Play.info()})
 	elseif G.STATE == G.STATES.SHOP then
 		ok({Shop = RE.Shop.info()})
+    elseif RE.Boosters.info() ~= nil then
+        if G.shop then
+            ok({ShopOpen = RE.Boosters.info()})
+        else
+            ok({SkipOpen = RE.Boosters.info()})
+        end
     end
 end
 

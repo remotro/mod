@@ -68,11 +68,11 @@ function Game:update(dt)
 				local pack = string.match(request.kind, "^.*/open/(.-)/.*\z")
 				local action = string.match(request.kind, "^.*/open/.*/(.+)\z")
 				if action == "skip" then
-					RE.Boosters.Protocol.skip(request.body, context, pack, result_responder(ret .. "/info"))
+					RE.Boosters.Protocol.skip(request.body, ret, pack, result_responder(ret .. "/info"))
 				elseif action == "click" then
-					RE.Boosters.Protocol.click(request.body, context, pack, result_responder(ret .. "/open/" .. pack .. "/info"))
+					RE.Boosters.Protocol.click(request.body, ret, pack, result_responder(ret .. "/open/" .. pack .. "/info"))
 				elseif action == "select" then
-					RE.Boosters.Protocol.select(request.body, context, pack, result_responder(request.kind))
+					RE.Boosters.Protocol.select(request.body, ret, pack, result_responder(request.kind))
 				end
 			-- hud actions structured as <context>/hud/<action>
 			elseif string.match(request.kind, ".*/hud/.*\z") then

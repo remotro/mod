@@ -1,20 +1,14 @@
 RE.Hud = {}
 RE.Hud.Protocol = {}
 
-local function context_screen(context)
-    if context == "menu" then
+local function screen_info(screen)
+    if screen == "menu" then
         return {}
-    elseif context == "blind_select" then
+    elseif screen == "blind_select" then
         return RE.Blinds.info()
-    elseif context == "play" then
+    elseif screen == "play" then
         return RE.Play.info()
-    elseif context == "shop" then
-        return RE.Shop.info()
-    elseif context == "blind_select" then
-        return RE.Blinds.info()
-    elseif context == "play" then
-        return RE.Play.info()
-    elseif context == "shop" then
+    elseif screen == "shop" then
         return RE.Shop.info()
     end
 end
@@ -73,7 +67,7 @@ function RE.Hud.info()
     }
 end
 
-function RE.Hud.Protocol.sell_joker(request, context, ok, err)
+function RE.Hud.Protocol.sell_joker(request, screen, ok, err)
     local card = G.jokers.cards[request.index + 1]
     if not card then
         err("invalid sell index")
@@ -85,13 +79,13 @@ function RE.Hud.Protocol.sell_joker(request, context, ok, err)
             return G.CONTROLLER.locks.selling_card ~= nil
         end, function()
             RE.Util.enqueue(function()
-                ok(context_screen(context))
+                ok(screen_info(screen))
             end)
         end)
     end)
 end
 
-function RE.Hud.Protocol.move_joker(request, context, ok, err)
+function RE.Hud.Protocol.move_joker(request, screen, ok, err)
     local from = request.from
     if not G.jokers.cards[from + 1] then
         err("invalid move from index")
@@ -105,11 +99,11 @@ function RE.Hud.Protocol.move_joker(request, context, ok, err)
     local tmp = G.jokers.cards[from + 1]
     table.remove(G.jokers.cards, from + 1)
     RE.Util.enqueue(function()
-        ok(context_screen(context))
+        ok(screen_info(screen))
     end)
 end
 
-function RE.Hud.Protocol.sell_consumable(request, context, ok, err)
+function RE.Hud.Protocol.sell_consumable(request, screen, ok, err)
     local card = G.consumeables.cards[request.index + 1]
     if not card then
         err("invalid sell index")
@@ -121,13 +115,13 @@ function RE.Hud.Protocol.sell_consumable(request, context, ok, err)
             return G.CONTROLLER.locks.selling_card ~= nil
         end, function()
             RE.Util.enqueue(function()
-                ok(context_screen(context))
+                ok(screen_info(screen))
             end)
         end)
     end)
 end
 
-function RE.Hud.Protocol.move_consumable(request, context, ok, err)
+function RE.Hud.Protocol.move_consumable(request, screen, ok, err)
     local from = request.from
     if not G.consumeables.cards[from + 1] then
         err("invalid move from index")
@@ -141,11 +135,11 @@ function RE.Hud.Protocol.move_consumable(request, context, ok, err)
     table.remove(G.consumeables.cards, from + 1)
     table.insert(G.consumeables.cards, to + 1, tmp)
     RE.Util.enqueue(function()
-        ok(context_screen(context))
+        ok(screen_info(screen))
     end)
 end
 
-function RE.Hud.Protocol.use_consumable(request, context, ok, err)
+function RE.Hud.Protocol.use_consumable(request, screen, ok, err)
     local card = G.consumeables.cards[request.index + 1]
     if not card then
         err("invalid use index")
@@ -153,6 +147,6 @@ function RE.Hud.Protocol.use_consumable(request, context, ok, err)
     end
     G.FUNCS.use_card({config={ref_table=card}})
     RE.Util.enqueue(function()
-        ok(context_screen(context))
+        ok(screen_info(screen))
     end)
 end

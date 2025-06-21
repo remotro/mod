@@ -2,27 +2,48 @@ RE.Screen = {}
 RE.Screen.Protocol = {}
 
 function RE.Screen.Protocol.get(ok, err)
-    if G.STATE == G.STATES.MENU then
-        ok({Menu = RE.Menu.info()})
-    elseif G.STATE == G.STATES.BLIND_SELECT then
-        ok({SelectBlind = RE.Blinds.info()})
-    elseif G.STATE == G.STATES.SELECTING_HAND then
-        ok({Play = RE.Play.info()})
-    elseif G.STATE == G.STATES.ROUND_EVAL then
-        RE.Overview.round(function (info)
-            ok({RoundOverview = info})
-        end)
-	elseif G.STATE == G.STATES.SHOP then
-		ok({Shop = RE.Shop.info()})
-    elseif G.STATE == G.STATES.GAME_OVER then
-        ok({GameOver = RE.Overview.game()})
-    elseif RE.Boosters.info() ~= nil then
-        if G.shop then
-            ok({ShopOpen = RE.Boosters.info()})
-        else
-            ok({SkipOpen = RE.Boosters.info()})
+    RE.Util.await(function()
+        sendTraceMessage("state checks: " .. G.STATE)
+        if G.STATE == G.STATES.MENU then
+            sendTraceMessage("MENU")
+        elseif G.STATE == G.STATES.BLIND_SELECT then
+            sendTraceMessage("BLIND_SELECT")
+        elseif G.STATE == G.STATES.SELECTING_HAND then
+            sendTraceMessage("SELECTING_HAND")
+        elseif G.STATE == G.STATES.ROUND_EVAL then
+            sendTraceMessage("ROUND_EVAL")
+        elseif G.STATE == G.STATES.SHOP then
+            sendTraceMessage("SHOP")
+        elseif G.STATE == G.STATES.GAME_OVER then
+            sendTraceMessage("GAME_OVER")
+        elseif RE.Boosters.info() ~= nil then
+            sendTraceMessage("BOOSTERS")
         end
-    end
+
+        return G.STATE == G.STATES.MENU or G.STATE == G.STATES.BLIND_SELECT or G.STATE == G.STATES.SELECTING_HAND or G.STATE == G.STATES.ROUND_EVAL or RE.Shop.info() ~= nil or G.STATE == G.STATES.GAME_OVER or RE.Boosters.info() ~= nil
+    end, function(res)
+        if G.STATE == G.STATES.MENU then
+            ok({Menu = RE.Menu.info()})
+        elseif G.STATE == G.STATES.BLIND_SELECT then
+            ok({SelectBlind = RE.Blinds.info()})
+        elseif G.STATE == G.STATES.SELECTING_HAND then
+            ok({Play = RE.Play.info()})
+        elseif G.STATE == G.STATES.ROUND_EVAL then
+            RE.Overview.round(function (info)
+                ok({RoundOverview = info})
+            end)
+        elseif RE.Shop.info() ~= nil then
+            ok({Shop = RE.Shop.info()})
+        elseif G.STATE == G.STATES.GAME_OVER then
+            ok({GameOver = RE.Overview.game()})
+        elseif RE.Boosters.info() ~= nil then
+            if G.shop then
+                ok({ShopOpen = RE.Boosters.info()})
+            else
+                ok({SkipOpen = RE.Boosters.info()})
+            end
+        end
+    end)
 end
 
 function RE.Screen.await(states, cb)

@@ -33,7 +33,7 @@ function Game:update(dt)
 			elseif request.kind == "main_menu/start_run" then
 				RE.Menu.Protocol.start_run(request.body, result_responder("blind_select/info"))
 			elseif request.kind == "main_menu/continue_run" then
-				RE.Menu.Protocol.continue_run(request.body, result_responder("screen/current"))
+				RE.Menu.Protocol.continue_run(result_responder("screen/current"))
 			elseif request.kind == "blind_select/select" then
 				RE.Blinds.Protocol.select_blind(request.body, result_responder("play/hand"))
 			elseif request.kind == "blind_select/skip" then

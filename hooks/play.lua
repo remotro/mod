@@ -10,9 +10,9 @@ function RE.Play.info()
         local base_json = RE.Deck.playing_card(card)
         local json;
         if card.facing == 'front' then
-            json = { card = base_json, selected = card.highlighted }
+            json = { card = base_json, selected = card.highlighted or false }
         else
-            json = { card = nil, selected = card.highlighted }
+            json = { card = nil, selected = card.highlighted or false }
         end
         table.insert(json_hand, json)
     end
@@ -85,18 +85,18 @@ function RE.Play.Protocol.play(request, ok, err)
         return
     end
 
-    -- -- Needs to be some highlighted cards
-    -- if #G.hand.highlighted <= 0 then
-    --     err("no cards highlighted")
-    --     return
-    -- end
+    -- Needs to be some highlighted cards
+    if #G.hand.highlighted <= 0 then
+        err("no cards highlighted")
+        return
+    end
 
-    G.GAME.chips = G.GAME.blind.chips
-    G.STATE = G.STATES.HAND_PLAYED
-    G.STATE_COMPLETE = true
-    end_round()
+    -- G.GAME.chips = G.GAME.blind.chips
+    -- G.STATE = G.STATES.HAND_PLAYED
+    -- G.STATE_COMPLETE = true
+    -- end_round()
 
-    -- G.FUNCS.play_cards_from_highlighted(nil)
+    G.FUNCS.play_cards_from_highlighted(nil)
 
     RE.Screen.await({G.STATES.SELECTING_HAND, G.STATES.ROUND_EVAL, G.STATES.GAME_OVER}, function(new_state)
         if new_state == G.STATES.SELECTING_HAND then

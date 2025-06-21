@@ -20,6 +20,7 @@ payload = '''
 self.GAME = saveTable and saveTable.GAME or self:init_game_object()
 self.RE = {}
 self.RE.earnings = {}
+self.RE.shop = false
 '''
 match_indent = true
 times = 1
@@ -62,6 +63,39 @@ payload = '''                G.VIBRATION = G.VIBRATION + 1
         end
     }))
 end
+'''
+match_indent = true
+times = 1
+
+[[patches]]
+[patches.pattern]
+target = "game.lua"
+pattern = '''
+G.CONTROLLER:snap_to({node = G.shop:get_UIE_by_ID('next_round_button')})
+if not nosave_shop then G.E_MANAGER:add_event(Event({ func = function() save_run(); return true end})) end
+return true
+'''
+position = "at"
+payload = '''
+G.CONTROLLER:snap_to({node = G.shop:get_UIE_by_ID('next_round_button')})
+if not nosave_shop then G.E_MANAGER:add_event(Event({ func = function() save_run(); return true end})) end
+G.RE.shop = true
+return true
+'''
+match_indent = true
+times = 1
+
+[[patches]]
+[patches.pattern]
+target = "function/button_callbacks.lua"
+pattern = '''
+G.FUNCS.toggle_shop = function(e)
+'''
+position = "at"
+payload = '''
+G.FUNCS.toggle_shop = function(e)
+sendTraceMessage("reset shop")
+G.RE.shop = false
 '''
 match_indent = true
 times = 1

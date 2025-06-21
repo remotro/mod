@@ -2,21 +2,20 @@ RE.Menu = {}
 RE.Menu.Protocol = {}
 
 function RE.Menu.info()
-    G.UIDEF.run_setup_option()
-    if not G.SAVED_GAME then
-        sendTraceMessage("No saved game")
+    saved_game = get_compressed(G.SETTINGS.profile..'/'..'save.jkr')
+    if saved_game ~= nil then saved_game = STR_UNPACK(saved_game) end
+    if not saved_game then
         return { saved_run = nil, unrelated = "required because lua json + serde json hate eachother and are subtly incompatible" }
     end
  
-    sendTraceMessage("Saved game")
     return {
         saved_run = {
-            deck = G.SAVED_GAME.GAME.selected_back_key.key,
-            stake = G.SAVED_GAME.GAME.stake,
-            best_hand = G.SAVED_GAME.GAME.round_scores.hand.amt,
-            round = G.SAVED_GAME.GAME.round,
-            ante = G.SAVED_GAME.GAME.round_resets.ante,
-            money = G.SAVED_GAME.GAME.dollars,
+            deck = saved_game.GAME.selected_back_key.key,
+            stake = saved_game.GAME.stake,
+            best_hand = saved_game.GAME.round_scores.hand.amt,
+            round = saved_game.GAME.round,
+            ante = saved_game.GAME.round_resets.ante,
+            money = saved_game.GAME.dollars,
         }
     }
 end
@@ -49,13 +48,25 @@ function RE.Menu.Protocol.start_run(request, ok, err)
 end
 
 function RE.Menu.Protocol.continue_run(ok, err)
-    if G.STATE == G.STATES.MENU then
+    if G.STATE ~= G.STATES.MENU then
         err("cannot do this action, must be in menu (" .. G.STATES.MENU .. ") but in " .. G.STATE)
+        return
     end
-    G.UIDEF.run_setup_option()
 
-    G.FUNCS.start_run(e, { savetext = G.SAVED_GAME });
-    RE.Util.enqueue(function()
-        ok(RE.Screen.Protocol.get(ok, err))
-    end)
+    saved_game = get_compressed(G.SETTINGS.profile..'/'..'save.jkr')
+    if saved_game ~= nil then saved_game = STR_UNPACK(saved_game) end
+    if not saved_game then
+        err("no saved game")
+        return
+    end
+    G.FUNCS.start_run(e, {savetext = saved_game});
+    sendTraceMessage("continue_run")
+    sendTraceMessage("continue_run")
+    sendTraceMessage("continue_run")
+    sendTraceMessage("continue_run")
+    sendTraceMessage("continue_run")
+    sendTraceMessage("continue_run")
+    RE.Util.hammer(function()
+        RE.Screen.Protocol.get(ok, err)
+    end, 10)
 end

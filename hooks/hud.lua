@@ -19,10 +19,12 @@ function RE.Hud.info()
 	local money = G.GAME.dollars
     local round = G.GAME.round
     local ante = G.GAME.round_resets.ante
+	local joker_slots = G.jokers.config.card_limit
     local jokers = {}
     for _, card in pairs(G.jokers.cards) do
         table.insert(jokers, RE.Jokers.joker(card))
     end
+	local consumable_slots = G.consumeables.config.card_limit
     local consumables = {}
     for _, card in pairs(G.consumeables.cards) do
         table.insert(consumables, RE.Consumables.consumable(card))
@@ -51,6 +53,7 @@ function RE.Hud.info()
 		money = money,
         round = round,
         ante = ante,
+		joker_slots = joker_slots,
         jokers = jokers,
         consumables = consumables,
         tags = G.GAME.tags,

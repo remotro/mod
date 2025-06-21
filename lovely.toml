@@ -99,3 +99,27 @@ G.RE.shop = false
 '''
 match_indent = true
 times = 1
+
+
+[[patches]]
+[patches.pattern]
+target = "game.lua"
+match_indent = true
+pattern = "timer_checkpoint('canvas', 'draw')"
+position = "after"
+payload = '''
+message = RE.Client.connected() and {G.C.GREEN, "Remotro Connected. Press Ctrl+Shift+D to disconnect"} or {G.C.RED,"Remotro Disconnected. Press CTRL+Shift+D to Reconnect"}
+love.graphics.print(message, 10, 10)
+'''
+
+[[patches]]
+[patches.pattern]
+target = 'engine/controller.lua'
+match_indent = true
+pattern = "function Controller:key_press_update(key, dt)"
+position = "after"
+payload = '''
+    if (self.held_keys["lshift"] or self.held_keys["rshift"]) and (self.held_keys["lctrl"] or self.held_keys["rctrl"]) and key == "d" then
+        G.FUNCS.remotro_reconnect()
+    end
+'''

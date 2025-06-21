@@ -95,17 +95,17 @@ local function pack_info(ret)
 end
 
 local function ret_info(ret, cb)
-    if ret == "shop" then
+    if ret == "shop/info" then
         cb(RE.Shop.info())
-    elseif ret == "skip" then
+    elseif ret == "blind_select/skip_result" then
         RE.Blinds.skip_result(cb)
     end
 end
 
 local function is_ret(ret)
-    if ret == "shop" then
+    if ret == "shop/info" then
         return G.STATE == G.STATES.SHOP
-    elseif ret == "skip" then
+    elseif ret == "blind_select/skip_result" then
         return G.STATE == G.STATES.BLIND_SELECT
     end
 end
@@ -152,22 +152,25 @@ function RE.Boosters.Protocol.select(request, ret, pack, ok, err)
         err("Cannot do this action, must be in booster state but in state " .. G.STATE)
         return
     end
-    G.FUNCS.use_card({config = {ref_table = G.pack_cards.cards[request.index + 1]}})
+    local card = G.pack_cards.cards[request.index + 1]
+    if not card then
+        err("invalid use index")
+        return
+    end
+    if card.ability.max_highlighted then
+        if not G.hand.highlighted then
+            err("no cards highlighted")
+            return
+        elseif card.ability.max_highlighted > #G.hand.highlighted then
+            err("too many cards highlighted")
+            return
+        end
+    end
+    G.FUNCS.use_card({config = {ref_table = card}})
     if G.GAME.pack_choices == 1 then
         RE.Util.await(
             function()
                 sendTraceMessage(ret)
-                if G.STATE == G.STATES.SHOP then
-                    sendTraceMessage("WHY DONT YOU JUST WORK?!!?!")
-                else
-                    sendTraceMessage("UN. USABLE.")
-                end
-                if is_ret(ret) then
-                    sendTraceMessage("YOU ACTUAL IDIOT. WORK.")
-                else
-                    sendTraceMessage("WHY?" .. ret)
-                end
-
                 return is_ret(ret)
             end,
             function()
@@ -186,6 +189,10 @@ end
 function RE.Boosters.Protocol.click(request, ret, pack, ok, err)
     if RE.Boosters.info() == nil then
         err("Cannot do this action, must be in booster state but in state " .. G.STATE)
+        return
+    end
+    if not request.indices then
+        err("nothing clicked")
         return
     end
     local hand = G.hand.cards

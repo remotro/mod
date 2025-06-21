@@ -8,8 +8,14 @@ function RE.Screen.Protocol.get(ok, err)
         ok({SelectBlind = RE.Blinds.info()})
     elseif G.STATE == G.STATES.SELECTING_HAND then
         ok({Play = RE.Play.info()})
+    elseif G.STATE == G.STATES.ROUND_EVAL then
+        RE.Overview.round(function (info)
+            ok({RoundOverview = info})
+        end)
 	elseif G.STATE == G.STATES.SHOP then
 		ok({Shop = RE.Shop.info()})
+    elseif G.STATE == G.STATES.GAME_OVER then
+        ok({GameOver = RE.Overview.game()})
     elseif RE.Boosters.info() ~= nil then
         if G.shop then
             ok({ShopOpen = RE.Boosters.info()})

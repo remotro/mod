@@ -138,12 +138,20 @@ function RE.Hud.Protocol.move_consumable(request, screen, ok, err)
         ok(screen_info(screen))
     end)
 end
-
 function RE.Hud.Protocol.use_consumable(request, screen, ok, err)
     local card = G.consumeables.cards[request.index + 1]
     if not card then
         err("invalid use index")
         return
+    end
+    if card.ability.max_highlighted then
+        if not G.hand.highlighted then
+            err("no cards highlighted")
+            return
+        elseif card.ability.max_highlighted > #G.hand.highlighted then
+            err("too many cards highlighted")
+            return
+        end
     end
     G.FUNCS.use_card({config={ref_table=card}})
     RE.Util.enqueue(function()

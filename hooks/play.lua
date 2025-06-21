@@ -56,6 +56,10 @@ function RE.Play.Protocol.click(request, ok, err)
         return
     end
 
+    if not request.indices then
+        err("nothing clicked")
+    end
+
     local hand = G.hand.cards
     local indices = request.indices
     local invalid_indices = {}

@@ -8,6 +8,8 @@ function RE.Jokers.joker(card)
 
 	local kind_data = nil
 	local key = card.config.center.key
+
+	sendTraceMessage(RE.JSON.encode(card.ability))
 	
 	-- Add additional fields based on joker type
 	if key == "j_stencil" then
@@ -81,7 +83,7 @@ function RE.Jokers.joker(card)
 	elseif key == "j_campfire" then
 		kind_data = { xmult = card.ability.extra }
 	elseif key == "j_swashbuckler" then
-		kind_data = { mult = card.ability.extra }
+		kind_data = { mult = card.ability.extra or 0 }
 	elseif key == "j_throwback" then
 		kind_data = { xmult = card.ability.extra }
 	elseif key == "j_glass" then

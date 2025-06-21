@@ -84,3 +84,6 @@ function RE.Overview.Protocol.cash_out(ok, err)
         end
 }))
 end
+
+function RE.Overview.game(cb)
+end

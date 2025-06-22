@@ -81,13 +81,23 @@ function RE.Blinds.Protocol.skip_blind(request, ok, err)
 end
 
 function RE.Blinds.skip_result(cb)
-    RE.Util.await(function ()
-        return G.STATE == G.STATES.BLIND_SELECT or RE.Boosters.info() ~= nil
-    end, function()
-        if G.STATE == G.STATES.BLIND_SELECT then
-            cb(RE.Blinds.info())
-        else
-            cb(RE.Boosters.info())
+    local maybe_skipping = { "Small", "Big" }
+    local tag
+    for _, blind in ipairs(maybe_skipping) do
+        if G.GAME.round_resets.blind_states[blind] == "Upcoming" then
+            tag = G.GAME.round_resets.blind_tags[blind]
         end
-    end)
+    end
+    local tags_that_open_booster = { "tag_standard", "tag_charm", "tag_meteor", "tag_buffoon" }
+    if tag and table.contains(tags_that_open_booster, tag) then
+        RE.Util.await(function ()
+            return RE.Boosters.info() ~= nil
+        end, function()
+            cb({Booster = RE.Boosters.info()})
+        end)
+    else
+        RE.Util.enqueue(function()
+            cb({Select = RE.Blinds.info()})
+        end)
+    end
 end

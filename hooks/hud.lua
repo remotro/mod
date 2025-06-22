@@ -2,14 +2,14 @@ RE.Hud = {}
 RE.Hud.Protocol = {}
 
 local function screen_info(screen)
-    if screen == "menu" then
-        return {}
-    elseif screen == "blind_select" then
+    if screen == "blind_select" then
         return RE.Blinds.info()
     elseif screen == "play" then
         return RE.Play.info()
     elseif screen == "shop" then
         return RE.Shop.info()
+    elseif string.match(screen, ".*/open/.*") then
+        return RE.Boosters.info(true)
     end
 end
 
@@ -47,6 +47,10 @@ function RE.Hud.info()
     for voucher, _ in pairs(G.GAME.used_vouchers) do
         table.insert(vouchers_redeemed, voucher)
     end
+    local tags = {}
+    for _, tag in pairs(G.GAME.tags) do
+        table.insert(tags, tag.key)
+    end
     return {
         hands = hands,
 		discards = discards,
@@ -56,7 +60,7 @@ function RE.Hud.info()
 		joker_slots = joker_slots,
         jokers = jokers,
         consumables = consumables,
-        tags = G.GAME.tags,
+        tags = tags,
         run_info = {
             poker_hands = poker_hands,
             blinds = {

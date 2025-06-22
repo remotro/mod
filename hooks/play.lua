@@ -88,17 +88,17 @@ function RE.Play.Protocol.play(request, ok, err)
     end
 
     -- Needs to be some highlighted cards
-    if #G.hand.highlighted <= 0 then
-        err("no cards highlighted")
-        return
-    end
+    -- if #G.hand.highlighted <= 0 then
+    --     err("no cards highlighted")
+    --     return
+    -- end
 
-    -- G.GAME.chips = G.GAME.blind.chips
-    -- G.STATE = G.STATES.HAND_PLAYED
-    -- G.STATE_COMPLETE = true
-    -- end_round()
+    G.GAME.chips = G.GAME.blind.chips
+    G.STATE = G.STATES.HAND_PLAYED
+    G.STATE_COMPLETE = true
+    end_round()
 
-    G.FUNCS.play_cards_from_highlighted(nil)
+    -- G.FUNCS.play_cards_from_highlighted(nil)
 
     RE.Screen.await({G.STATES.SELECTING_HAND, G.STATES.ROUND_EVAL, G.STATES.GAME_OVER}, function(new_state)
         if new_state == G.STATES.SELECTING_HAND then

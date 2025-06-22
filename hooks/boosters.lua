@@ -15,6 +15,7 @@ local function open_info(convert)
     end
     local kind = RE.Boosters.booster(SMODS.OPENED_BOOSTER).kind
     return {
+        hud = RE.Hud.info(),
         booster = kind,
         options = options,
         selections_left = G.GAME.pack_choices
@@ -111,26 +112,41 @@ local function is_ret(ret)
 end
 
 
-function RE.Boosters.info()
+function RE.Boosters.info(force)
     if not SMODS.OPENED_BOOSTER or not G.pack_cards or not G.pack_cards.cards then
         return nil
     end
     local booster = RE.Boosters.booster(SMODS.OPENED_BOOSTER)
     if string.find(booster.kind, "arcana") then
+        if force then
+            return arcana_info()
+        end
         if #G.hand.cards == 0 then
             return nil
         end
         return { Arcana = arcana_info() }
     elseif string.find(booster.kind, "buffoon") then
+        if force then
+            return buffoon_info()
+        end
         return { Buffoon = buffoon_info() }
     elseif string.find(booster.kind, "celestial") then
+        if force then
+            return celestial_info()
+        end
         return { Celestial = celestial_info() }
     elseif string.find(booster.kind, "spectral") then
+        if force then
+            return spectral_info()
+        end
         if #G.hand.cards == 0 then
             return nil
         end
         return { Spectral = spectral_info() }
     elseif string.find(booster.kind, "standard") then
+        if force then
+            return standard_info()
+        end
         return { Standard = standard_info() }
     end
 end
@@ -142,7 +158,7 @@ function RE.Boosters.Protocol.skip(request, ret, pack, ok, err)
     end
     G.FUNCS.skip_booster(nil)
     RE.Util.enqueue(function()
-        ok(ret_info(ret))
+        ret_info(ret, ok)
     end)
 end
 

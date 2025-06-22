@@ -10,7 +10,7 @@ function RE.Menu.info()
  
     return {
         saved_run = {
-            deck = saved_game.GAME.selected_back_key.key,
+            deck = saved_game.BACK.key,
             stake = saved_game.GAME.stake,
             best_hand = saved_game.GAME.round_scores.hand.amt,
             round = saved_game.GAME.round,
@@ -26,14 +26,14 @@ function RE.Menu.Protocol.start_run(request, ok, err)
         return
     end
 
-    back_obj = G.P_CENTERS[request["back"]]
+    back_obj = G.P_CENTERS[request["deck"]]
     if not back_obj then
-        err("could not find back " .. request["back"])
+        err("could not find deck " .. request["deck"])
         return
     end
 
     if not back_obj.unlocked then
-        err("back " .. request["back"] .. " is not unlocked")
+        err("deck " .. request["deck"] .. " is not unlocked")
         return
     end
 
@@ -60,12 +60,6 @@ function RE.Menu.Protocol.continue_run(ok, err)
         return
     end
     G.FUNCS.start_run(e, {savetext = saved_game});
-    sendTraceMessage("continue_run")
-    sendTraceMessage("continue_run")
-    sendTraceMessage("continue_run")
-    sendTraceMessage("continue_run")
-    sendTraceMessage("continue_run")
-    sendTraceMessage("continue_run")
     RE.Util.hammer(function()
         RE.Screen.Protocol.get(ok, err)
     end, 10)

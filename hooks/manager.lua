@@ -37,7 +37,7 @@ function Game:update(dt)
 			elseif request.kind == "blind_select/select" then
 				RE.Blinds.Protocol.select_blind(request.body, result_responder("play/hand"))
 			elseif request.kind == "blind_select/skip" then
-				RE.Blinds.Protocol.skip_blind(request.body, result_responder("blind_select/info"))
+				RE.Blinds.Protocol.skip_blind(request.body, result_responder("blind_select/skip_result"))
     
 			elseif request.kind == "play/click" then
                 RE.Play.Protocol.click(request.body, result_responder("play/hand"))
@@ -62,20 +62,8 @@ function Game:update(dt)
 			elseif request.kind == "overview/cash_out" then
 				RE.Overview.Protocol.cash_out(result_responder("shop/info"))
 				
-			-- booster actions structured like <context>/open/<pack>/action
-			elseif string.match(request.kind, ".*/open/.*/.*\z") then
-				local ret = string.match(request.kind, "^(.-)/open/.*\z")
-				local pack = string.match(request.kind, "^.*/open/(.-)/.*\z")
-				local action = string.match(request.kind, "^.*/open/.*/(.+)\z")
-				if action == "skip" then
-					RE.Boosters.Protocol.skip(request.body, ret, pack, result_responder(ret .. "/info"))
-				elseif action == "click" then
-					RE.Boosters.Protocol.click(request.body, ret, pack, result_responder(ret .. "/open/" .. pack .. "/info"))
-				elseif action == "select" then
-					RE.Boosters.Protocol.select(request.body, ret, pack, result_responder(request.kind))
-				end
 			-- hud actions structured as <context>/hud/<action>
-			elseif string.match(request.kind, ".*/hud/.*\z") then
+			elseif string.match(request.kind, ".*/hud/.*") then
 				local context = string.match(request.kind, "^(.-)/hud/.*\z")
 				local action = string.match(request.kind, "^.*/hud/(.*)\z")
 				sendTraceMessage("hud request, context: " .. context .. " action: " .. action)
@@ -89,6 +77,18 @@ function Game:update(dt)
 					RE.Hud.Protocol.move_consumable(request.body, context, result_responder(context .. "/info"))
 				elseif action == "consumables/use" then
 					RE.Hud.Protocol.use_consumable(request.body, context, result_responder(context .. "/info"))
+				end
+			-- booster actions structured like <context>/open/<pack>/action
+			elseif string.match(request.kind, ".*/open/.*/.*\z") then
+				local ret = string.match(request.kind, "^(.-)/open/.*\z")
+				local pack = string.match(request.kind, "^.*/open/(.-)/.*\z")
+				local action = string.match(request.kind, "^.*/open/.*/(.+)\z")
+				if action == "skip" then
+					RE.Boosters.Protocol.skip(request.body, ret, pack, result_responder(ret))
+				elseif action == "click" then
+					RE.Boosters.Protocol.click(request.body, ret, pack, result_responder(ret .. "/open/" .. pack .. "/info"))
+				elseif action == "select" then
+					RE.Boosters.Protocol.select(request.body, ret, pack, result_responder(request.kind))
 				end
 			end
 		end

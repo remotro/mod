@@ -9,6 +9,7 @@ function RE.Deck.playing_card(card)
     if card.ability.name ~= "Default Base" then
         enhancement = "m_" .. string.lower(card.ability.name:match("%w+"));
     end
+	local debuffed = card.debuff;
     local rank = card.base.value;
     local suit = card.base.suit;
     local seal = nil;
@@ -16,6 +17,7 @@ function RE.Deck.playing_card(card)
         seal = string.lower(card.seal) .. "_seal";
     end
     return {
+		debuffed = debuffed,
         edition = edition,
         enhancement = enhancement,
         rank = rank,

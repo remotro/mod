@@ -81,23 +81,6 @@ function RE.Play.Protocol.click(request, ok, err)
     ok(RE.Play.info())
 end
 
-function RE.Play.Protocol.move(request, ok, err)
-    local from = request.from
-    if not G.hand.cards[from + 1] then
-        err("invalid move from index")
-        return
-    end
-    local to = request.to
-    if not G.hand.cards[to + 1] then
-        err("invalid move to index")
-        return
-    end
-    table.insert(G.hand.cards, to + 1 , table.remove(G.hand.cards, from + 1))
-    RE.Util.enqueue(function()
-        ok(RE.Play.info())
-    end)
-end
-
 function RE.Play.Protocol.play(request, ok, err)
     if G.STATE ~= G.STATES.SELECTING_HAND then
         err("cannot do this action, must be in selecting_hand but in " .. G.STATE)

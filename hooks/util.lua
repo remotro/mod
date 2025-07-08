@@ -48,6 +48,23 @@ function RE.Util.enqueue(cb)
     }))
 end
 
+function RE.Util.move_hand_card(request, ok, err)
+    local from = request.from
+    if not G.hand.cards[from + 1] then
+        err("invalid move from index")
+        return
+    end
+    local to = request.to
+    if not G.hand.cards[to + 1] then
+        err("invalid move to index")
+        return
+    end
+    table.insert(G.hand.cards, to + 1 , table.remove(G.hand.cards, from + 1))
+    RE.Util.enqueue(function()
+        ok(RE.Play.info())
+    end)
+end
+
 --[[function RE.Util.inspectTable(t, filePath, options)
     -- Default options
     options = options or {}

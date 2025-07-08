@@ -73,7 +73,7 @@ function RE.Jokers.joker(card)
 	elseif key == "j_trousers" then
 		kind_data = { mult = card.ability.mult or 0 }
 	elseif key == "j_ancient" then
-		kind_data = { suit =  G.GAME.ancient_round.castle_card.suit }
+		kind_data = { suit =  G.GAME.current_round.ancient_card.suit }
 	elseif key == "j_ramen" then
 		kind_data = { xmult = card.ability.Xmult }
 	elseif key == "j_selzer" then

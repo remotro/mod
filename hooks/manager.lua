@@ -42,7 +42,7 @@ function Game:update(dt)
 			elseif request.kind == "play/click" then
                 RE.Play.Protocol.click(request.body, result_responder("play/hand"))
 			elseif request.kind == "play/move" then
-				RE.Util.move_hand_card(request.body, result_responder("play/hand"))
+				RE.Play.Protocol.move(request.body, result_responder("play/hand"))
             elseif request.kind == "play/play" then
                 RE.Play.Protocol.play(request.body, result_responder("play/play/result"))
 			elseif request.kind == "play/discard" then
@@ -92,7 +92,7 @@ function Game:update(dt)
 				elseif action == "select" then
 					RE.Boosters.Protocol.select(request.body, ret, pack, result_responder(request.kind))
 				elseif action == "move" then
-					RE.Util.move_hand_card(request.body, ret, pack, result_responder(ret .. "/open/" .. pack .. "/info"))
+					RE.Boosters.Protocol.move(request.body, ret, pack, result_responder(ret .. "/open/" .. pack .. "/info"))
 				end
 			end
 		end

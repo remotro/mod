@@ -230,3 +230,20 @@ function RE.Boosters.Protocol.click(request, ret, pack, ok, err)
     end
     ok(pack_info(pack))
 end
+
+function RE.Boosters.Protocol.move(request, ret, pack, ok, err)
+    local from = request.from
+    if not G.hand.cards[from + 1] then
+        err("invalid move from index")
+        return
+    end
+    local to = request.to
+    if not G.hand.cards[to + 1] then
+        err("invalid move to index")
+        return
+    end
+    table.insert(G.hand.cards, to + 1 , table.remove(G.hand.cards, from + 1))
+    RE.Util.enqueue(function()
+        ok(pack_info(pack))
+    end)
+end

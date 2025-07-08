@@ -103,8 +103,7 @@ function RE.Hud.Protocol.move_joker(request, screen, ok, err)
         err("invalid move to index")
         return
     end
-    local tmp = G.jokers.cards[from + 1]
-    table.remove(G.jokers.cards, from + 1)
+    table.insert(G.jokers.cards, to + 1 , table.remove(G.jokers.cards, from + 1))
     RE.Util.enqueue(function()
         ok(screen_info(screen))
     end)
@@ -139,9 +138,8 @@ function RE.Hud.Protocol.move_consumable(request, screen, ok, err)
         err("invalid move to index")
         return
     end
-    table.remove(G.consumeables.cards, from + 1)
-    table.insert(G.consumeables.cards, to + 1, tmp)
-    RE.Util.enqueue(function()
+    table.insert(G.consumeables.cards, to + 1, table.remove(G.consumeables.cards, from + 1))
+	RE.Util.enqueue(function()
         ok(screen_info(screen))
     end)
 end

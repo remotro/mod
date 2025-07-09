@@ -17,6 +17,11 @@ function RE.Play.info()
         end
         table.insert(json_hand, json)
     end
+	local deck = G.deck.cards
+	local json_deck = {}
+	for _, card in ipairs(deck) do
+		table.insert(json_deck, RE.Deck.playing_card(card))
+	end
     local poker_hand = nil
     if #G.hand.highlighted > 0 then
         local evaluated_hand = evaluate_poker_hand(G.hand.highlighted)
@@ -34,7 +39,7 @@ function RE.Play.info()
         elseif next(evaluated_hand["Two Pair"]) then kind = "Two Pair"; hand = G.GAME.hands["Two Pair"]
         elseif next(evaluated_hand["Pair"]) then kind = "Pair"; hand = G.GAME.hands["Pair"]
         elseif next(evaluated_hand["High Card"]) then kind = "High Card"; hand = G.GAME.hands["High Card"] end
-    
+
         poker_hand = {
             kind = kind,
             level = hand.level,
@@ -44,6 +49,7 @@ function RE.Play.info()
     end
     return { 
 		hand = json_hand,
+		deck = json_deck,
 		hand_size = hand_size,
 		current_blind = RE.Blinds.current(),
 		score = score,

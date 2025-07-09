@@ -24,6 +24,10 @@ function RE.Hud.info()
     for _, card in pairs(G.jokers.cards) do
         table.insert(jokers, RE.Jokers.joker(card))
     end
+	local json_deck = {}
+	for _, card in ipairs(G.deck.cards) do
+		table.insert(json_deck, RE.Deck.playing_card(card))
+	end
 	local consumable_slots = G.consumeables.config.card_limit
     local consumables = {}
     for _, card in pairs(G.consumeables.cards) do
@@ -61,6 +65,7 @@ function RE.Hud.info()
         jokers = jokers,
         consumables = consumables,
         tags = tags,
+		deck = json_deck,
         run_info = {
             poker_hands = poker_hands,
             blinds = {

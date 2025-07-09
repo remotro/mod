@@ -17,10 +17,9 @@ function RE.Play.info()
         end
         table.insert(json_hand, json)
     end
-	local deck = G.deck.cards
-	local json_deck = {}
-	for _, card in ipairs(deck) do
-		table.insert(json_deck, RE.Deck.playing_card(card))
+	local json_discarded = {}
+	for _, card in ipairs(G.discard.cards) do
+		table.insert(json_discarded, RE.Deck.playing_card(card))
 	end
     local poker_hand = nil
     if #G.hand.highlighted > 0 then
@@ -49,12 +48,12 @@ function RE.Play.info()
     end
     return { 
 		hand = json_hand,
-		deck = json_deck,
 		hand_size = hand_size,
 		current_blind = RE.Blinds.current(),
 		score = score,
         poker_hand = poker_hand,
 		hud = RE.Hud.info(),
+		discarded = json_discarded,
 	}
 end
 

@@ -48,12 +48,12 @@ function RE.Play.info()
     end
     return { 
 		hand = json_hand,
+		discarded = json_discarded,
 		hand_size = hand_size,
 		current_blind = RE.Blinds.current(),
 		score = score,
         poker_hand = poker_hand,
 		hud = RE.Hud.info(),
-		discarded = json_discarded,
 	}
 end
 

@@ -15,6 +15,7 @@ local function open_info(convert)
     end
     local kind = RE.Boosters.booster(SMODS.OPENED_BOOSTER).kind
     return {
+        hud = RE.Hud.info(),
         booster = kind,
         options = options,
         selections_left = G.GAME.pack_choices
@@ -80,79 +81,134 @@ local function standard_info()
     return open_info_with_hand(RE.Deck.playing_card)
 end
 
-local function pack_info(context)
-    if context == "arcana" then
+local function pack_info(ret)
+    if ret == "arcana" then
         return arcana_info()
-    elseif context == "buffoon" then
+    elseif ret == "buffoon" then
         return buffoon_info()
-    elseif context == "celestial" then
+    elseif ret == "celestial" then
         return celestial_info()
-    elseif context == "spectral" then
+    elseif ret == "spectral" then
         return spectral_info()
-    elseif context == "standard" then
+    elseif ret == "standard" then
         return standard_info()
     end
 end
 
-local function context_info(context)
-    if context == "shop" then
-        return RE.Shop.info()
+local function ret_info(ret, cb)
+    if ret == "shop/info" then
+        cb(RE.Shop.info())
+    elseif ret == "blind_select/skip_result" then
+        RE.Blinds.skip_result(cb)
     end
 end
 
-function RE.Boosters.info()
-    if SMODS.OPENED_BOOSTER == nil or G.pack_cards == nil then
+local function is_ret(ret)
+    if ret == "shop/info" then
+        return G.STATE == G.STATES.SHOP
+    elseif ret == "blind_select/skip_result" then
+        return G.STATE == G.STATES.BLIND_SELECT
+    end
+end
+
+
+function RE.Boosters.info(force)
+    if not SMODS.OPENED_BOOSTER or not G.pack_cards or not G.pack_cards.cards then
         return nil
     end
     local booster = RE.Boosters.booster(SMODS.OPENED_BOOSTER)
     if string.find(booster.kind, "arcana") then
+        if force then
+            return arcana_info()
+        end
         if #G.hand.cards == 0 then
             return nil
         end
         return { Arcana = arcana_info() }
     elseif string.find(booster.kind, "buffoon") then
+        if force then
+            return buffoon_info()
+        end
         return { Buffoon = buffoon_info() }
     elseif string.find(booster.kind, "celestial") then
+        if force then
+            return celestial_info()
+        end
         return { Celestial = celestial_info() }
     elseif string.find(booster.kind, "spectral") then
+        if force then
+            return spectral_info()
+        end
         if #G.hand.cards == 0 then
             return nil
         end
         return { Spectral = spectral_info() }
     elseif string.find(booster.kind, "standard") then
+        if force then
+            return standard_info()
+        end
         return { Standard = standard_info() }
     end
 end
 
-function RE.Boosters.Protocol.skip(request, context, pack, ok, err)
+function RE.Boosters.Protocol.skip(request, ret, pack, ok, err)
     if RE.Boosters.info() == nil then
         err("Cannot do this action, must be in booster state but in state " .. G.STATE)
         return
     end
     G.FUNCS.skip_booster(nil)
     RE.Util.enqueue(function()
-        ok(context_info(context))
+        ret_info(ret, ok)
     end)
 end
 
-function RE.Boosters.Protocol.select(request, context, pack, ok, err)
+function RE.Boosters.Protocol.select(request, ret, pack, ok, err)
+    local info = RE.Boosters.info()
+    if not info then
+        err("Cannot do this action, must be in booster state but in state " .. G.STATE)
+        return
+    end
+    local card = G.pack_cards.cards[request.index + 1]
+    if not card then
+        err("invalid use index")
+        return
+    end
+    if card.ability.max_highlighted then
+        if not G.hand.highlighted then
+            err("no cards highlighted")
+            return
+        elseif card.ability.max_highlighted > #G.hand.highlighted then
+            err("too many cards highlighted")
+            return
+        end
+    end
+    G.FUNCS.use_card({config = {ref_table = card}})
+    if G.GAME.pack_choices == 1 then
+        RE.Util.await(
+            function()
+                sendTraceMessage(ret)
+                return is_ret(ret)
+            end,
+            function()
+                ret_info(ret, function (info)
+                    ok({Done = info})
+                end)
+            end
+        )
+    else
+        RE.Util.enqueue(function()
+            ok({Again = pack_info(pack)})
+        end)
+    end
+end
+
+function RE.Boosters.Protocol.click(request, ret, pack, ok, err)
     if RE.Boosters.info() == nil then
         err("Cannot do this action, must be in booster state but in state " .. G.STATE)
         return
     end
-    G.FUNCS.use_card({config = {ref_table = G.pack_cards.cards[request.index + 1]}})
-    RE.Util.enqueue(function()
-        if RE.Boosters.info() then
-            ok({Again = pack_info(pack)})
-        else
-            ok({Again = context_info(context)})
-        end
-    end)
-end
-
-function RE.Boosters.Protocol.click(request, context, pack, ok, err)
-    if RE.Boosters.info() == nil then
-        err("Cannot do this action, must be in booster state but in state " .. G.STATE)
+    if not request.indices then
+        err("nothing clicked")
         return
     end
     local hand = G.hand.cards
@@ -173,4 +229,21 @@ function RE.Boosters.Protocol.click(request, context, pack, ok, err)
         hand[index + 1]:click()
     end
     ok(pack_info(pack))
+end
+
+function RE.Boosters.Protocol.move(request, ret, pack, ok, err)
+    local from = request.from
+    if not G.hand.cards[from + 1] then
+        err("invalid move from index")
+        return
+    end
+    local to = request.to
+    if not G.hand.cards[to + 1] then
+        err("invalid move to index")
+        return
+    end
+    table.insert(G.hand.cards, to + 1 , table.remove(G.hand.cards, from + 1))
+    RE.Util.enqueue(function()
+        ok(pack_info(pack))
+    end)
 end

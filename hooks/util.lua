@@ -16,6 +16,27 @@ function RE.Util.await(a, cb)
     }))
 end
 
+function RE.Util.hammer(cb, n)
+    sendTraceMessage("hammer " .. n)
+    RE.Util.hammer_helper(cb, n, 0)
+end
+
+function RE.Util.hammer_helper(cb, n, i)
+    G.E_MANAGER:add_event(Event({
+        trigger = 'immediate',
+        no_delete = true,
+        func = function()
+            sendTraceMessage("hammer " .. i)
+            if i < n then
+                RE.Util.hammer_helper(cb, n, i + 1)
+                return true
+            end
+            cb()
+            return true
+        end
+    }))
+end
+
 function RE.Util.enqueue(cb)
     G.E_MANAGER:add_event(Event({
         trigger = 'immediate',

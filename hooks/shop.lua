@@ -2,6 +2,16 @@ RE.Shop = {}
 RE.Shop.Protocol = {}
 
 function RE.Shop.info()
+	sendTraceMessage("state: " .. G.STATE)
+	if G.RE.shop then
+		sendTraceMessage("shop: true")
+	else
+		sendTraceMessage("shop: false")
+	end
+	if G.STATE ~= G.STATES.SHOP or not G.RE.shop then
+		sendTraceMessage("returning nil")
+		return nil
+	end
 	local main = G.shop_jokers.cards
 	local vouchers = G.shop_vouchers.cards
 	local boosters = G.shop_booster.cards

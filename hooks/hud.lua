@@ -64,6 +64,7 @@ function RE.Hud.info()
 		joker_slots = joker_slots,
         jokers = jokers,
         consumables = consumables,
+		consumable_slots = consumable_slots,
         tags = tags,
 		deck = json_deck,
         run_info = {

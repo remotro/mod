@@ -11,12 +11,16 @@ function RE.Play.info()
         local base_json = RE.Deck.playing_card(card)
         local json;
         if card.facing == 'front' then
-            json = { card = base_json, selected = card.highlighted }
+            json = { card = base_json, selected = card.highlighted or false }
         else
-            json = { card = nil, selected = card.highlighted }
+            json = { card = nil, selected = card.highlighted or false }
         end
         table.insert(json_hand, json)
     end
+	local json_discarded = {}
+	for _, card in ipairs(G.discard.cards) do
+		table.insert(json_discarded, RE.Deck.playing_card(card))
+	end
     local poker_hand = nil
     if #G.hand.highlighted > 0 then
         local evaluated_hand = evaluate_poker_hand(G.hand.highlighted)
@@ -34,7 +38,7 @@ function RE.Play.info()
         elseif next(evaluated_hand["Two Pair"]) then kind = "Two Pair"; hand = G.GAME.hands["Two Pair"]
         elseif next(evaluated_hand["Pair"]) then kind = "Pair"; hand = G.GAME.hands["Pair"]
         elseif next(evaluated_hand["High Card"]) then kind = "High Card"; hand = G.GAME.hands["High Card"] end
-    
+
         poker_hand = {
             kind = kind,
             level = hand.level,
@@ -44,6 +48,7 @@ function RE.Play.info()
     end
     return { 
 		hand = json_hand,
+		discarded = json_discarded,
 		hand_size = hand_size,
 		current_blind = RE.Blinds.current(),
 		score = score,
@@ -56,6 +61,10 @@ function RE.Play.Protocol.click(request, ok, err)
     if G.STATE ~= G.STATES.SELECTING_HAND then
         err("cannot do this action, must be in selecting_hand but in " .. G.STATE)
         return
+    end
+
+    if not request.indices then
+        err("nothing clicked")
     end
 
     local hand = G.hand.cards
@@ -77,6 +86,23 @@ function RE.Play.Protocol.click(request, ok, err)
     ok(RE.Play.info())
 end
 
+function RE.Play.Protocol.move(request, ok, err)
+    local from = request.from
+    if not G.hand.cards[from + 1] then
+        err("invalid move from index")
+        return
+    end
+    local to = request.to
+    if not G.hand.cards[to + 1] then
+        err("invalid move to index")
+        return
+    end
+    table.insert(G.hand.cards, to + 1 , table.remove(G.hand.cards, from + 1))
+    RE.Util.enqueue(function()
+        ok(RE.Play.info())
+    end)
+end
+
 function RE.Play.Protocol.play(request, ok, err)
     if G.STATE ~= G.STATES.SELECTING_HAND then
         err("cannot do this action, must be in selecting_hand but in " .. G.STATE)
@@ -84,15 +110,17 @@ function RE.Play.Protocol.play(request, ok, err)
     end
 
     -- Needs to be some highlighted cards
-    if #G.hand.highlighted <= 0 then
-        err("no cards highlighted")
-        return
-    end
+    -- if #G.hand.highlighted <= 0 then
+    --     err("no cards highlighted")
+    --     return
+    -- end
 
     G.GAME.chips = G.GAME.blind.chips
     G.STATE = G.STATES.HAND_PLAYED
     G.STATE_COMPLETE = true
     end_round()
+
+    -- G.FUNCS.play_cards_from_highlighted(nil)
 
     RE.Screen.await({G.STATES.SELECTING_HAND, G.STATES.ROUND_EVAL, G.STATES.GAME_OVER}, function(new_state)
         if new_state == G.STATES.SELECTING_HAND then

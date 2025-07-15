@@ -20,7 +20,14 @@ function RE.Screen.Protocol.get(ok, err)
             sendTraceMessage("BOOSTERS")
         end
 
-        return G.STATE == G.STATES.MENU or G.STATE == G.STATES.BLIND_SELECT or G.STATE == G.STATES.SELECTING_HAND or G.STATE == G.STATES.ROUND_EVAL or RE.Shop.info() ~= nil or G.STATE == G.STATES.GAME_OVER or RE.Boosters.info() ~= nil
+        return G.STATE == G.STATES.MENU
+		or G.STATE == G.STATES.BLIND_SELECT
+		or G.STATE == G.STATES.SELECTING_HAND
+		or G.STATE == G.STATES.ROUND_EVAL
+		or G.STATE == G.STATES.GAME_OVER
+		or RE.Shop.info() ~= nil
+		or RE.Boosters.info() ~= nil
+
     end, function(res)
         if G.STATE == G.STATES.MENU then
             ok({Menu = RE.Menu.info()})

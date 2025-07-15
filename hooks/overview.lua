@@ -72,4 +72,7 @@ function RE.Overview.Protocol.cash_out(ok, err)
 end
 
 function RE.Overview.game(cb)
+	return {
+		outcome = G.GAME.round_resets.ante <= G.GAME.win_ante and "Loss" or "Win"
+	}
 end

@@ -14,12 +14,6 @@ local function screen_info(screen)
 end
 
 function RE.Hud.info()
-	local hands = G.GAME.current_round.hands_left
-	local discards = G.GAME.current_round.discards_left
-	local money = G.GAME.dollars
-    local round = G.GAME.round
-    local ante = G.GAME.round_resets.ante
-	local joker_slots = G.jokers.config.card_limit
     local jokers = {}
     for _, card in pairs(G.jokers.cards) do
         table.insert(jokers, RE.Jokers.joker(card))
@@ -28,7 +22,6 @@ function RE.Hud.info()
 	for _, card in ipairs(G.deck.cards) do
 		table.insert(json_deck, RE.Deck.playing_card(card))
 	end
-	local consumable_slots = G.consumeables.config.card_limit
     local consumables = {}
     for _, card in pairs(G.consumeables.cards) do
         table.insert(consumables, RE.Consumables.consumable(card))
@@ -56,15 +49,15 @@ function RE.Hud.info()
         table.insert(tags, tag.key)
     end
     return {
-        hands = hands,
-		discards = discards,
-		money = money,
-        round = round,
-        ante = ante,
-		joker_slots = joker_slots,
+        hands = G.GAME.current_round.hands_left,
+		discards = G.GAME.current_round.discards_left,
+		money = G.GAME.dollars,
+        round = G.GAME.round,
+        ante = G.GAME.round_resets.ante,
         jokers = jokers,
+		joker_slots = G.jokers.config.card_limit,
         consumables = consumables,
-		consumable_slots = consumable_slots,
+		consumable_slots = G.consumeables.config.card_limit,
         tags = tags,
 		deck = json_deck,
         run_info = {
@@ -76,6 +69,7 @@ function RE.Hud.info()
             },
             vouchers_redeemed = vouchers_redeemed,
             stake = G.GAME.stake,
+			deck = G.GAME.selected_back.effect.center.key,
         }
     }
 end
@@ -149,6 +143,7 @@ function RE.Hud.Protocol.move_consumable(request, screen, ok, err)
         ok(screen_info(screen))
     end)
 end
+
 function RE.Hud.Protocol.use_consumable(request, screen, ok, err)
     local card = G.consumeables.cards[request.index + 1]
     if not card then

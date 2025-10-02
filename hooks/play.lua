@@ -125,6 +125,7 @@ function RE.Play.Protocol.play(request, ok, err)
                 ok({RoundOver = res})
             end)
         elseif new_state == G.STATES.GAME_OVER then
+            print("Game Over State reached ABCD123")
             ok({GameOver = RE.Overview.game()})
         end
     end)
@@ -154,6 +155,7 @@ function RE.Play.Protocol.discard(request, ok, err)
         if new_state == G.STATES.SELECTING_HAND then
             ok({Again = RE.Play.info()})
         elseif new_state == G.STATES.GAME_OVER then
+            print("Game Over State reached ABCD123")
             ok({GameOver = RE.Overview.game()})
         end
     end)

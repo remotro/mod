@@ -8,6 +8,7 @@ function RE.Jokers.joker(card)
 
 	local kind_data = nil
 	local key = card.config.center.key
+	-- RE.Util.inspectTable(card, "joker.jkr")
 
 	sendTraceMessage(RE.JSON.encode(card.ability))
 	
@@ -15,7 +16,7 @@ function RE.Jokers.joker(card)
 	if key == "j_stencil" then
 		kind_data = { xmult = card.ability.Xmult or 0 }
 	elseif key == "j_ceremonial" then
-		kind_data = { mult = card.ability.mult or 0 }
+		kind_data = { mult = card.ability.extra or 0 }
 	elseif key == "j_loyalty_card" then
 		-- Sadly the remaining field is a string value formatted as
 		-- "N remaining" so we need to parse it
@@ -25,9 +26,11 @@ function RE.Jokers.joker(card)
 	elseif key == "j_steel_joker" then
 		kind_data = { xmult = card.ability.Xmult or 0 }
 	elseif key == "j_abstract" then
-		kind_data = { mult = card.ability.mult or 0 }
+		kind_data = { mult = card.ability.extra or 0 }
 	elseif key == "j_ride_the_bus" then
-		kind_data = { mult = card.ability.mult or 0 }
+		kind_data = { mult = card.ability.extra or 0 }
+	elseif key == "j_runner" then
+		kind_data = { chips = card.ability.chips or 0 }
 	elseif key == "j_ice_cream" then
 		kind_data = { chips = card.ability.chips or 0 }
 	elseif key == "j_blue_joker" then
@@ -35,11 +38,11 @@ function RE.Jokers.joker(card)
 	elseif key == "j_constellation" then
 		kind_data = { xmult = card.ability.Xmult or 0 }
 	elseif key == "j_green_joker" then
-		kind_data = { mult = card.ability.mult or 0 }
+		kind_data = { mult = card.ability.extra or 0 }
 	elseif key == "j_todo_list" then
 		kind_data = { poker_hand = card.ability.extra.poker_hand }
 	elseif key == "j_red_card" then
-		kind_data = { mult = card.ability.mult or 0 }
+		kind_data = { mult = card.ability.extra or 0 }
 	elseif key == "j_madness" then
 		kind_data = { xmult = card.ability.Xmult or 0 }
 	elseif key == "j_square" then
@@ -57,21 +60,21 @@ function RE.Jokers.joker(card)
 	elseif key == "j_turtle_bean" then
 		kind_data = { hand_size = card.ability.hand_size or 0 }
 	elseif key == "j_erosion" then
-		kind_data = { mult = card.ability.mult or 0 }
+		kind_data = { mult = card.ability.extra or 0 }
 	elseif key == "j_mail" then
 		kind_data = { rank = G.GAME.current_round.mail_card.rank }
 	elseif key == "j_fortune_teller" then
-		kind_data = { mult = card.ability.mult or 0 }
+		kind_data = { mult = card.ability.extra or 0 }
 	elseif key == "j_stone" then
 		kind_data = { chips = card.ability.chips or 0 }
 	elseif key == "j_lucky_cat" then
 		kind_data = { xmult = card.ability.Xmult or 0 }
 	elseif key == "j_flash" then
-		kind_data = { mult = card.ability.mult or 0 }
+		kind_data = { mult = card.ability.extra or 0 }
 	elseif key == "j_popcorn" then
-		kind_data = { mult = card.ability.mult or 0 }
+		kind_data = { mult = card.ability.extra or 0 }
 	elseif key == "j_trousers" then
-		kind_data = { mult = card.ability.mult or 0 }
+		kind_data = { mult = card.ability.extra or 0 }
 	elseif key == "j_ancient" then
 		kind_data = { suit =  G.GAME.current_round.ancient_card.suit }
 	elseif key == "j_ramen" then
@@ -83,13 +86,15 @@ function RE.Jokers.joker(card)
 	elseif key == "j_campfire" then
 		kind_data = { xmult = card.ability.Xmult or 0 }
 	elseif key == "j_swashbuckler" then
-		kind_data = { mult = card.ability.mult or 0 }
+		kind_data = { mult = card.ability.extra or 0 }
 	elseif key == "j_throwback" then
 		kind_data = { xmult = card.ability.Xmult or 0 }
 	elseif key == "j_glass" then
 		kind_data = { xmult = card.ability.Xmult or 0 }
 	elseif key == "j_wee" then
 		kind_data = { chips = card.ability.chips or 0 }
+	elseif key == "j_idol" then
+		kind_data = { rank = card.rank, suit = card.suit }
 	elseif key == "j_hit_the_road" then
 		kind_data = { xmult = card.ability.Xmult or 0 }
 	elseif key == "j_invisible" then
@@ -101,7 +106,7 @@ function RE.Jokers.joker(card)
 	elseif key == "j_astronomer" then
 		kind_data = { xmult = card.ability.Xmult or 0 }
 	elseif key == "j_bootstraps" then
-		kind_data = { mult = card.ability.mult or 0 }
+		kind_data = { mult = card.ability.extra or 0 }
 	elseif key == "j_caino" then
 		kind_data = { xmult = card.ability.Xmult or 0 }
 	elseif key == "j_yorick" then

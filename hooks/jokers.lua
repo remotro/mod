@@ -101,7 +101,7 @@ function RE.Jokers.joker(card)
 	elseif key == "j_ancient" then
 		kind_data = { suit =  G.GAME.current_round.ancient_card.suit }
 	elseif key == "j_ramen" then
-		kind_data = { xmult = card.ability.Xmult }
+		kind_data = { xmult = card.ability.x_mult }
 	elseif key == "j_selzer" then
 		kind_data = { hands_left = card.ability.extra }
 	elseif key == "j_castle" then
@@ -127,23 +127,21 @@ function RE.Jokers.joker(card)
 	elseif key == "j_invisible" then
 		kind_data = { rounds = card.ability.invis_rounds }
 	elseif key == "j_satellite" then
-		kind_data = { earnings = function() 
+		kind_data = { earnings = function()
+			local planets_used = 0
 			for k, v in pairs(G.GAME.consumeable_usage) do
                 if v.set == 'Planet' then planets_used = planets_used + 1 end
             end
-            if planets_used == 0 then return end
 			return card.ability.extra*planets_used
- or 0 }
+		end }
 	elseif key == "j_drivers_license" then
-		kind_data = { cards = card.ability.driver_tally }
-	elseif key == "j_astronomer" then
-		kind_data = { xmult = card.ability.Xmult or 0 }
+		kind_data = { cards = card.ability.driver_tally >= 16 and card.ability.extra or 1 }
 	elseif key == "j_bootstraps" then
-		kind_data = { mult = card.ability.extra or 0 }
+		kind_data = { mult = self.ability.extra.mult*math.floor((G.GAME.dollars + (G.GAME.dollar_buffer or 0))/self.ability.extra.dollars) or 0 }
 	elseif key == "j_caino" then
-		kind_data = { xmult = card.ability.Xmult or 0 }
+		kind_data = { xmult = card.ability.canio_xmult or 0 }
 	elseif key == "j_yorick" then
-		kind_data = { xmult = card.ability.Xmult or 0 }
+		kind_data = { xmult = card.ability.x_mult or 0 }
 	end
 
 	local result = { kind = kind, price = card.cost, edition = edition }

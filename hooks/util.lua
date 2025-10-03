@@ -48,7 +48,7 @@ function RE.Util.enqueue(cb)
     }))
 end
 
-function RE.Util.inspectTable(t, filePath, options)
+--[[ function RE.Util.inspectTable(t, filePath, options)
     -- Default options
     options = options or {}
     local currentPath = options.currentPath or "root"
@@ -114,4 +114,4 @@ function RE.Util.inspectTable(t, filePath, options)
         file:write("\n")
         file:close()
     end
-end
+end ]]--

@@ -28,19 +28,20 @@ function RE.Hud.info()
     end
     local poker_hands = {}
     for kind, poker_hand in pairs(G.GAME.hands) do
-        -- for the field we need to lowercase and replace spaces with underscores
-        local transformed_kind = kind:lower():gsub(" ", "_")
-        poker_hands[transformed_kind] = {
-            played = poker_hand.played,
-            hand = {
-                kind = kind,
-                level = poker_hand.level,
-                chips = poker_hand.chips,
-                mult = poker_hand.mult,
+        if (kind ~= "Five of a Kind" and kind ~= "Flush House" and kind ~= "Flush Five") or poker_hand.played > 0 then            
+            -- for the field we need to lowercase and replace spaces with underscores
+            local transformed_kind = kind:lower():gsub(" ", "_")
+            poker_hands[transformed_kind] = {
+                played = poker_hand.played,
+                hand = {
+                    kind = kind,
+                    level = poker_hand.level,
+                    chips = poker_hand.chips,
+                    mult = poker_hand.mult,
+                }
             }
-        }
+        end
     end
-    -- TODO: Populate zero-played poker hands and optional Flush/Five variants so CurrentPokerHands always includes every required field.
     local vouchers_redeemed = {}
     for voucher, _ in pairs(G.GAME.used_vouchers) do
         table.insert(vouchers_redeemed, voucher)

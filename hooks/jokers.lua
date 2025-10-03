@@ -29,9 +29,9 @@ function RE.Jokers.joker(card)
 	elseif key == "j_bloodstone" then
 		kind_data = { probability = G.GAME.probabilities.normal }
 	elseif key == "j_runner" then
-		-- TODO: Provide 'chips' value for JokerKind::Runner
+		kind_data = { chips = card.ability.chips or 0 }
 	elseif key == "j_dna" then
-		-- TODO: Provide 'active' value for JokerKind::Dna
+		kind_data = { active = G.GAME.current_round.hands_played == 0 }
 	elseif key == "j_stencil" then
 		kind_data = { xmult = card.ability.Xmult or 0 }
 	elseif key == "j_ceremonial" then
@@ -65,7 +65,7 @@ function RE.Jokers.joker(card)
 	elseif key == "j_square" then
 		kind_data = { chips = card.ability.chips or 0 }
 	elseif key == "j_bull" then
-		-- TODO: Provide 'chips' value for JokerKind::Bull
+		kind_data = { chips = card.ability.chips or 0 }
 	elseif key == "j_vampire" then
 		kind_data = { xmult = card.ability.Xmult or 0 }
 	elseif key == "j_hologram" then
@@ -95,7 +95,7 @@ function RE.Jokers.joker(card)
 	elseif key == "j_trousers" then
 		kind_data = { mult = card.ability.mult or 0 }
 	elseif key == "j_trading" then
-		-- TODO: Provide 'active' value for JokerKind::Trading
+		kind_data = { chips = card.ability.chips or 0, active = G.GAME.current_round.discards_used }
 	elseif key == "j_ancient" then
 		kind_data = { suit =  G.GAME.current_round.ancient_card.suit }
 	elseif key == "j_ramen" then
@@ -115,11 +115,11 @@ function RE.Jokers.joker(card)
 	elseif key == "j_wee" then
 		kind_data = { chips = card.ability.chips or 0 }
 	elseif key == "j_blueprint" then
-		-- TODO: Provide 'compatible' value for JokerKind::Blueprint
+		kind_data = { compatible = self.ability.blueprint_compat == "compatible" }
 	elseif key == "j_hit_the_road" then
 		kind_data = { xmult = card.ability.Xmult or 0 }
-	elseif key == "j_idol" then
-		-- TODO: Provide 'rank' and 'suit' values for JokerKind::Idol
+	elseif key == "j_idol" temp_hand
+		kind_data = { rank = G.GAME.current_round.idol_card.rank, suit = G.GAME.current_round.idol_card.suit }
 	elseif key == "j_invisible" then
 		kind_data = { rounds = card.ability.invis_rounds }
 	elseif key == "j_satellite" then
@@ -133,10 +133,9 @@ function RE.Jokers.joker(card)
 	elseif key == "j_caino" then
 		kind_data = { xmult = card.ability.Xmult or 0 }
 	elseif key == "j_brainstorm" then
-		-- TODO: Provide 'compatible' value for JokerKind::Brainstorm
+		kind_data = { compatible = self.ability.blueprint_compat == "compatible" }
 	elseif key == "j_yorick" then
-		kind_data = { xmult = card.ability.Xmult or 0 }
-		-- TODO: Provide 'left' value for JokerKind::Yorick
+		kind_data = { xmult = card.ability.Xmult or 0, left = self.ability.yorick_discards }
 	end
 
 	local result = { kind = kind, price = card.cost, edition = edition }

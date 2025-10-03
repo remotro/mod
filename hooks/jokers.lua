@@ -12,8 +12,28 @@ function RE.Jokers.joker(card)
 	sendTraceMessage(RE.JSON.encode(card.ability))
 	
 	-- Add additional fields based on joker type
-	if key == "j_stencil" then
-		kind_data = { xmult = card.ability.x_mult or 0 }
+	if key == "j_8_ball" then
+		kind_data = { probability = G.GAME.probabilities.normal }
+	elseif key == "j_gros_michel" then
+		kind_data = { probability = G.GAME.probabilities.normal }
+	elseif key == "j_business" then
+		kind_data = { probability = G.GAME.probabilities.normal }
+	elseif key == "j_space" then
+		kind_data = { probability = G.GAME.probabilities.normal }
+	elseif key == "j_cavendish" then
+		kind_data = { probability = G.GAME.probabilities.normal }
+	elseif key == "j_reserved_parking" then
+		kind_data = { probability = G.GAME.probabilities.normal }
+	elseif key == "j_hallucination" then
+		kind_data = { probability = G.GAME.probabilities.normal }
+	elseif key == "j_bloodstone" then
+		kind_data = { probability = G.GAME.probabilities.normal }
+	elseif key == "j_runner" then
+		kind_data = { chips = card.ability.chips or 0 }
+	elseif key == "j_dna" then
+		kind_data = { active = G.GAME.current_round.hands_played == 0 }
+	elseif key == "j_stencil" then
+		kind_data = { xmult = card.ability.Xmult or 0 }
 	elseif key == "j_ceremonial" then
 		kind_data = { mult = card.ability.mult or 0 }
 	elseif key == "j_loyalty_card" then
@@ -46,6 +66,8 @@ function RE.Jokers.joker(card)
 		kind_data = { xmult = card.ability.x_mult or 0 }
 	elseif key == "j_square" then
 		kind_data = { chips = card.ability.extra.chips or 0 }
+	elseif key == "j_bull" then
+		kind_data = { chips = card.ability.extra.chips or 0 }
 	elseif key == "j_vampire" then
 		kind_data = { xmult = card.ability.x_mult or 0 }
 	elseif key == "j_hologram" then
@@ -74,6 +96,8 @@ function RE.Jokers.joker(card)
 		kind_data = { mult = card.ability.mult or 0 }
 	elseif key == "j_trousers" then
 		kind_data = { mult = card.ability.mult or 0 }
+	elseif key == "j_trading" then
+		kind_data = { active = G.GAME.current_round.discards_used }
 	elseif key == "j_ancient" then
 		kind_data = { suit =  G.GAME.current_round.ancient_card.suit }
 	elseif key == "j_ramen" then
@@ -96,10 +120,20 @@ function RE.Jokers.joker(card)
 		kind_data = { rank = G.GAME.current_round.idol_card.id, suit = G.GAME.current_round.idol_card.suit }
 	elseif key == "j_hit_the_road" then
 		kind_data = { xmult = card.ability.x_mult or 0 }
+	elseif key == "j_blueprint" then
+		kind_data = { compatible = self.ability.blueprint_compat == "compatible" }
+	elseif key == "j_brainstorm" then
+		kind_data = { compatible = self.ability.blueprint_compat == "compatible" }
 	elseif key == "j_invisible" then
 		kind_data = { rounds = card.ability.invis_rounds }
 	elseif key == "j_satellite" then
-		kind_data = { earnings = card.ability.earnings or 0 }
+		kind_data = { earnings = function() 
+			for k, v in pairs(G.GAME.consumeable_usage) do
+                if v.set == 'Planet' then planets_used = planets_used + 1 end
+            end
+            if planets_used == 0 then return end
+			return card.ability.extra*planets_used
+ or 0 }
 	elseif key == "j_drivers_license" then
 		kind_data = { cards = card.ability.driver_tally }
 	elseif key == "j_astronomer" then

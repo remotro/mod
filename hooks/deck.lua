@@ -23,6 +23,7 @@ function RE.Deck.playing_card(card)
         enhancement = enhancement,
         rank = rank,
         suit = suit,
-        seal = seal
+        seal = seal,
+        extra_chips = (card.ability.bonus + (card.ability.perma_bonus or 0)) > 0 and (card.ability.bonus + (card.ability.perma_bonus or 0)) or nil
     }
 end

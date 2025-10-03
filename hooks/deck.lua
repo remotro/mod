@@ -8,6 +8,7 @@ function RE.Deck.playing_card(card)
     local enhancement = nil;
     if card.ability.name ~= "Default Base" then
         enhancement = "m_" .. string.lower(card.ability.name:match("%w+"));
+        -- TODO: Attach enhancement metadata (e.g. Glass/Lucky probabilities) so the client can deserialize Enhancement variants with payloads.
     end
 	local debuffed = card.debuff;
     local rank = card.base.value;

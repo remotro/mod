@@ -10,7 +10,7 @@ function RE.Blinds.current()
     local current_blind_choice = G.GAME.blind_on_deck
     local blind_id = G.GAME.round_resets.blind_choices[current_blind_choice]
     if current_blind_choice == "Boss" then
-        return { Boss = { chips = calculate_chip_requirement(blind_id), kind = blind_id } }
+        return { Boss = { chips = calculate_chip_requirement(blind_id), kind = blind_id } } -- TODO: Enrich CurrentBlind::Boss with boss-specific metadata expected by the client (hand targets, wheel odds, etc.).
     else
         local ret = {}
         ret[current_blind_choice] = { chips = calculate_chip_requirement(blind_id) }
@@ -27,14 +27,16 @@ function RE.Blinds.choice(id)
         return {
             kind = kind,
             chips = chips,
-            state = blind_state
+            state = blind_state,
+            -- TODO: Provide structured BossBlindChoice.kind payload (e.g. The Ox hand type, The Wheel probability) when that data is available.
         }
     else
         local tag = G.GAME.round_resets.blind_tags[id]
         return {
             chips = chips,
             state = blind_state,
-            tag = tag
+            tag = tag,
+            -- TODO: Expand blind tag data to include required fields for non-unit Tag variants (earnings, poker hand, etc.).
         }
     end
 end

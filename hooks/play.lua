@@ -53,6 +53,7 @@ function RE.Play.info()
 		current_blind = RE.Blinds.current(),
 		score = score,
         poker_hand = poker_hand,
+		-- TODO: Populate PlayInfo.last_score once the proprietary scoring summary is reachable.
 		hud = RE.Hud.info(),
 	}
 end

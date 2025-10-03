@@ -40,6 +40,7 @@ function RE.Hud.info()
             }
         }
     end
+    -- TODO: Populate zero-played poker hands and optional Flush/Five variants so CurrentPokerHands always includes every required field.
     local vouchers_redeemed = {}
     for voucher, _ in pairs(G.GAME.used_vouchers) do
         table.insert(vouchers_redeemed, voucher)
@@ -47,6 +48,7 @@ function RE.Hud.info()
     local tags = {}
     for _, tag in pairs(G.GAME.tags) do
         table.insert(tags, tag.key)
+        -- TODO: Attach auxiliary data for tag variants that carry payloads (earnings, poker hand, etc.) once surfaced by the game.
     end
     return {
         hands = G.GAME.current_round.hands_left,

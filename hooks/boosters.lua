@@ -28,6 +28,7 @@ local function open_info_with_hand(convert)
     for i, card in ipairs(G.hand.cards) do
         table.insert(options.hand, { card = RE.Deck.playing_card(card), selected = card.highlighted })
     end
+    -- TODO: Include the exposed hand size so OpenWithHandInfo.hand_size deserializes correctly.
     return options
 end
 

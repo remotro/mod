@@ -42,7 +42,13 @@ function RE.Shop.info()
 		local json = RE.Boosters.booster(booster)
 		table.insert(boosters_row, json)
 	end
-	return { hud = RE.Hud.info(), main = main_row , vouchers = vouchers_row, boosters = boosters_row }
+	return {
+		hud = RE.Hud.info(),
+		main = main_row,
+		vouchers = vouchers_row,
+		boosters = boosters_row,
+		-- TODO: Surface ShopInfo.reroll_cost from the proprietary state so the client can mirror reroll pricing.
+	}
 end
 
 function RE.Shop.Protocol.buy_main(request, ok, err)

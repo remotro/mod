@@ -43,9 +43,6 @@ function RE.Menu.Protocol.start_run(request, ok, err)
     G.GAME.viewed_back = back_obj
     G.FUNCS.start_run(e, {stake = request["stake"], seed = request["seed"], challenge = nil});
     RE.Screen.await(G.STATES.BLIND_SELECT, function()
-        for joker = 1, 150 do
-            SMODS.spawn_card(set = 'Joker', key = joker)
-        end
         ok(RE.Blinds.info())
     end)
 end

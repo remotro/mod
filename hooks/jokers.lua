@@ -8,8 +8,6 @@ function RE.Jokers.joker(card)
 
 	local kind_data = nil
 	local key = card.config.center.key
-
-	sendTraceMessage(RE.JSON.encode(card.ability))
 	
 	-- Add additional fields based on joker type
 	if key == "j_8_ball" then
@@ -118,7 +116,7 @@ function RE.Jokers.joker(card)
 		kind_data = { compatible = self.ability.blueprint_compat == "compatible" }
 	elseif key == "j_hit_the_road" then
 		kind_data = { xmult = card.ability.Xmult or 0 }
-	elseif key == "j_idol" temp_hand
+	elseif key == "j_idol" then
 		kind_data = { rank = G.GAME.current_round.idol_card.rank, suit = G.GAME.current_round.idol_card.suit }
 	elseif key == "j_invisible" then
 		kind_data = { rounds = card.ability.invis_rounds }
@@ -148,7 +146,7 @@ function RE.Jokers.joker(card)
 		result.lifespan = "Normal"
 	end
 
-	result.rental = card.ability.rental ~= nil
+	result.rental = card.ability.rental ~= nil and card.ability.rental
 	
 	if kind_data then
 		result.kind = { [card.config.center.key] = kind_data }

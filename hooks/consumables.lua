@@ -36,7 +36,7 @@ function RE.Consumables.planet(card)
 	local edition = "e_base"
 	if card.edition then
 		edition = card.edition.key
-	endh
+	end
 	return { 
 		kind = { 
 			[card.config.center.key] = { 

@@ -121,9 +121,9 @@ function RE.Jokers.joker(card)
 	elseif key == "j_hit_the_road" then
 		kind_data = { xmult = card.ability.x_mult or 0 }
 	elseif key == "j_blueprint" then
-		kind_data = { compatible = self.ability.blueprint_compat == "compatible" }
+		kind_data = { compatible = card.ability.blueprint_compat == "compatible" }
 	elseif key == "j_brainstorm" then
-		kind_data = { compatible = self.ability.blueprint_compat == "compatible" }
+		kind_data = { compatible = card.ability.blueprint_compat == "compatible" }
 	elseif key == "j_invisible" then
 		kind_data = { rounds = card.ability.invis_rounds }
 	elseif key == "j_satellite" then
@@ -137,7 +137,7 @@ function RE.Jokers.joker(card)
 	elseif key == "j_drivers_license" then
 		kind_data = { cards = card.ability.driver_tally >= 16 and card.ability.extra or 1 }
 	elseif key == "j_bootstraps" then
-		kind_data = { mult = self.ability.extra.mult*math.floor((G.GAME.dollars + (G.GAME.dollar_buffer or 0))/self.ability.extra.dollars) or 0 }
+		kind_data = { mult = card.ability.extra.mult*math.floor((G.GAME.dollars + (G.GAME.dollar_buffer or 0))/card.ability.extra.dollars) or 0 }
 	elseif key == "j_caino" then
 		kind_data = { xmult = card.ability.canio_xmult or 0 }
 	elseif key == "j_yorick" then

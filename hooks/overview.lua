@@ -72,7 +72,36 @@ function RE.Overview.Protocol.cash_out(ok, err)
 end
 
 function RE.Overview.game(cb)
-	return {
-		outcome = G.GAME.round_resets.ante <= G.GAME.win_ante and "Loss" or "Win"
+    local outcome = {}
+    if G.GAME.round_resets.ante <= G.GAME.win_ante then
+        outcome = {
+            Loss = {
+                {
+                    defeated_by = RE.Blinds.current(),
+                    round = G.GAME.round,
+                    ante = G.GAME.round_resets.ante,
+                }
+            }
+        }
+    else
+        outcome = "Win"
+    end
+	return { -- TODO: Take data from the game
+		outcome = {Loss = {
+                defeated_by = RE.Blinds.current(),
+                round = G.GAME.round,
+                ante = G.GAME.round_resets.ante,
+            }},
+        best_hand = 10,
+        most_played_hand = {
+            kind = "High Card",
+            times_played = 10,
+        },
+        cards_played = 10,
+        cards_discarded = 10,
+        cards_purchased = 10,
+        times_rerolled = 10,
+        new_discoveries = 10,
+        seed = G.GAME.pseudorandom.seed,
 	}
 end

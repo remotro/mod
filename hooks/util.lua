@@ -76,9 +76,6 @@ end
         return
     end
     
-    -- Only process if we're in config or ability tables (or their children)
-    local shouldProcess = currentPath:find("^root%.config") or currentPath:find("^root%.ability")
-    
     -- Process all key-value pairs
     for key, value in pairs(t) do
         -- Format the path component
@@ -102,10 +99,7 @@ end
                 depth = depth + 1
             })
         else
-            -- Only write if we're in config or ability tables
-            if shouldProcess then
-                file:write(fullPath .. " = " .. tostring(value) .. "\n")
-            end
+            file:write(fullPath .. " = " .. tostring(value) .. "\n")
         end
     end
     

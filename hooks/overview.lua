@@ -72,36 +72,38 @@ function RE.Overview.Protocol.cash_out(ok, err)
 end
 
 function RE.Overview.game(cb)
+    local scores = G.GAME.round_scores
     local outcome = {}
     if G.GAME.round_resets.ante <= G.GAME.win_ante then
         outcome = {
             Loss = {
-                {
-                    defeated_by = RE.Blinds.current(),
-                    round = G.GAME.round,
-                    ante = G.GAME.round_resets.ante,
-                }
+                defeated_by = RE.Blinds.current(),
+                round = scores.furthest_round.amt,
+                ante = scores.furthest_ante.amt,
             }
         }
     else
         outcome = "Win"
     end
-	return { -- TODO: Take data from the game
-		outcome = {Loss = {
-                defeated_by = RE.Blinds.current(),
-                round = G.GAME.round,
-                ante = G.GAME.round_resets.ante,
-            }},
-        best_hand = 10,
+    local handname, count = "Error", 0
+    for _,v in pairs(G.GAME.hand_usage) do
+        if v.count > count then
+            handname = v.order
+            count = v.count 
+        end 
+    end
+	return {
+		outcome = outcome,
+        best_hand = scores['hand'].amt,
         most_played_hand = {
-            kind = "High Card",
-            times_played = 10,
+            kind = handname,
+            times_played = count,
         },
-        cards_played = 10,
-        cards_discarded = 10,
-        cards_purchased = 10,
-        times_rerolled = 10,
-        new_discoveries = 10,
+        cards_played = scores.cards_played.amt,
+        cards_discarded = scores.cards_discarded.amt,
+        cards_purchased = scores.cards_purchased.amt,
+        times_rerolled = scores.times_rerolled.amt,
+        new_discoveries = scores.new_collection.amt,
         seed = G.GAME.pseudorandom.seed,
 	}
 end

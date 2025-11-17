@@ -53,7 +53,7 @@ function RE.Jokers.joker(card)
 	elseif key == "j_ice_cream" then
 		kind_data = { chips = card.ability.extra.chips or 0 }
 	elseif key == "j_blue_joker" then
-		kind_data = { chips = card.ability.extra*#G.deck.cards or 0 }
+		kind_data = { chips = card.ability.extra * #G.deck.cards or 0 }
 	elseif key == "j_constellation" then
 		kind_data = { xmult = card.ability.x_mult or 0 }
 	elseif key == "j_green_joker" then
@@ -73,7 +73,7 @@ function RE.Jokers.joker(card)
 	elseif key == "j_hologram" then
 		kind_data = { xmult = card.ability.x_mult or 0 }
 	elseif key == "j_cloud_9" then
-		kind_data = { earnings = card.ability.extra*card.ability.nine_tally }
+		kind_data = { earnings = card.ability.extra * card.ability.nine_tally }
 	elseif key == "j_rocket" then
 		kind_data = { earnings = card.ability.extra.dollars }
 	elseif key == "j_obelisk" then
@@ -81,13 +81,13 @@ function RE.Jokers.joker(card)
 	elseif key == "j_turtle_bean" then
 		kind_data = { hand_size = card.ability.extra.h_size or 0 }
 	elseif key == "j_erosion" then
-		kind_data = { mult = card.ability.extra*(G.GAME.starting_deck_size - # G.playing_cards) or 0 }
+		kind_data = { mult = card.ability.extra*(G.GAME.starting_deck_size - #G.playing_cards) or 0 }
 	elseif key == "j_mail" then
 		kind_data = { rank = G.GAME.current_round.mail_card.id }
 	elseif key == "j_fortune_teller" then
 		kind_data = { mult = G.GAME.consumeable_usage_total.tarot or 0 }
 	elseif key == "j_stone" then
-		kind_data = { chips = card.ability.stone_tally*card.ability.extra or 0 }
+		kind_data = { chips = card.ability.stone_tally * card.ability.extra or 0 }
 	elseif key == "j_lucky_cat" then
 		kind_data = { xmult = card.ability.x_mult or 0 }
 	elseif key == "j_flash" then
@@ -137,7 +137,7 @@ function RE.Jokers.joker(card)
 	elseif key == "j_drivers_license" then
 		kind_data = { cards = card.ability.driver_tally >= 16 and card.ability.extra or 1 }
 	elseif key == "j_bootstraps" then
-		kind_data = { mult = card.ability.extra.mult*math.floor((G.GAME.dollars + (G.GAME.dollar_buffer or 0))/card.ability.extra.dollars) or 0 }
+		kind_data = { mult = card.ability.extra.mult * math.floor((G.GAME.dollars + (G.GAME.dollar_buffer or 0))/card.ability.extra.dollars) or 0 }
 	elseif key == "j_caino" then
 		kind_data = { xmult = card.ability.canio_xmult or 0 }
 	elseif key == "j_yorick" then

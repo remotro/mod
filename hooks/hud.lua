@@ -32,6 +32,7 @@ function RE.Hud.info()
         local transformed_kind = kind:lower():gsub(" ", "_")
         poker_hands[transformed_kind] = {
             played = poker_hand.played,
+            played_round = poker_hand.played_this_round,
             hand = {
                 kind = kind,
                 level = poker_hand.level,

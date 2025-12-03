@@ -109,9 +109,9 @@ end
 local timerCoroutine = coroutine.create(timer)
 
 -- All values are in seconds
-local keepAliveInitialTimeout = 7
-local keepAliveRetryTimeout = 3
-local keepAliveRetryCount = 3
+local keepAliveInitialTimeout = 2
+local keepAliveRetryTimeout = 1
+local keepAliveRetryCount = 2
 
 local isRetry = false
 local retryCount = 0

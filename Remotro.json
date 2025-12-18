@@ -4,7 +4,7 @@
 	"display_name": "Remotro",
 	"author": [
 		"OxygenCobalt",
-        "HeadedBranch225"
+    "HeadedBranch"
 	],
 	"description": "Allows Balatro to be controlled remotely",
 	"prefix": "re",

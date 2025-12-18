@@ -45,7 +45,7 @@ function Networking.connect()
 
 	Networking.Client = socket.tcp()
 	-- Allow for 10 seconds to reconnect
-	Networking.Client:settimeout(10)
+	Networking.Client:settimeout(5)
 
 	Networking.Client:setoption("tcp-nodelay", true)
 	local connectionResult, errorMessage = Networking.Client:connect(CONFIG_URL, CONFIG_PORT) -- Not sure if I want to make these values public yet

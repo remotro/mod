@@ -6,7 +6,8 @@ function result_responder(kind)
 		RE.Client.respond({
 			kind = result_kind,
 			body = {
-				Ok = body
+				Ok = body,
+				version = RE.version
 			}
 		})
 	end
@@ -14,7 +15,8 @@ function result_responder(kind)
 		RE.Client.respond({
 			kind = result_kind,
 			body = {
-				Err = message
+				Err = message,
+				version = RE.version
 			}
 		})
 	end

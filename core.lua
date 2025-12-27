@@ -23,7 +23,7 @@ function RE.load_re_dir(directory)
 		local file_path = directory .. "/" .. filename
 		if file_path:match(".lua$") then
 			if filename:match("^_") then
-				MP.load_mp_file(file_path)
+				RE.load_re_file(file_path)
 			else
 				table.insert(regular_files, file_path)
 			end

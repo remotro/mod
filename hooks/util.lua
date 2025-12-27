@@ -48,7 +48,7 @@ function RE.Util.enqueue(cb)
     }))
 end
 
---[[function RE.Util.inspectTable(t, filePath, options)
+--[[ function RE.Util.inspectTable(t, filePath, options)
     -- Default options
     options = options or {}
     local currentPath = options.currentPath or "root"
@@ -56,25 +56,26 @@ end
     local visited = options.visited or {}
     local file = options.file or io.open(filePath, "a")
     local depth = options.depth or 0
+    
     -- Check for circular references
     if visited[t] then
-        file:write(currentPath .. " = [CIRCULAR REFERENCE]\n")
         if not options.file then file:close() end
         return
     end
     visited[t] = true
+    
     -- Handle non-table values or max depth reached
     if type(t) ~= "table" or depth >= maxDepth then
-        file:write(currentPath .. " = " .. tostring(t) .. "\n")
         if not options.file then file:close() end
         return
     end
+    
     -- Handle empty tables
     if next(t) == nil then
-        file:write(currentPath .. " = {}\n")
         if not options.file then file:close() end
         return
     end
+    
     -- Process all key-value pairs
     for key, value in pairs(t) do
         -- Format the path component
@@ -87,6 +88,7 @@ end
             pathComponent = "[" .. tostring(key) .. "]"
         end
         local fullPath = currentPath .. pathComponent
+        
         -- Handle nested tables
         if type(value) == "table" then
             RE.Util.inspectTable(value, filePath, {
@@ -100,7 +102,10 @@ end
             file:write(fullPath .. " = " .. tostring(value) .. "\n")
         end
     end
-	file:write("\n")
-    -- Close file if we're the top-level caller
-    if not options.file then file:close() end
-end]]
+    
+    -- Only add space between different function calls (top-level only)
+    if depth == 0 and not options.file then
+        file:write("\n")
+        file:close()
+    end
+end ]]--

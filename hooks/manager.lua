@@ -6,7 +6,8 @@ function result_responder(kind)
 		RE.Client.respond({
 			kind = result_kind,
 			body = {
-				Ok = body
+				Ok = body,
+				version = RE.version
 			}
 		})
 	end
@@ -14,7 +15,8 @@ function result_responder(kind)
 		RE.Client.respond({
 			kind = result_kind,
 			body = {
-				Err = message
+				Err = message,
+				version = RE.version
 			}
 		})
 	end
@@ -27,27 +29,30 @@ function Game:update(dt)
 	repeat
 		local request = RE.Client.request()
 		if request then
-            sendDebugMessage("Recieved " .. request.kind)
+    	sendDebugMessage("Recieved " .. request.kind)
+			-- Getting Screen
 			if request.kind == "screen/get" then
 				RE.Screen.Protocol.get(result_responder("screen/current"))
+			-- In Main Menu
 			elseif request.kind == "main_menu/start_run" then
 				RE.Menu.Protocol.start_run(request.body, result_responder("blind_select/info"))
 			elseif request.kind == "main_menu/continue_run" then
 				RE.Menu.Protocol.continue_run(result_responder("screen/current"))
+			-- In Blind Select
 			elseif request.kind == "blind_select/select" then
 				RE.Blinds.Protocol.select_blind(request.body, result_responder("play/hand"))
 			elseif request.kind == "blind_select/skip" then
 				RE.Blinds.Protocol.skip_blind(request.body, result_responder("blind_select/skip_result"))
-    
+			-- Playing Hand
 			elseif request.kind == "play/click" then
-                RE.Play.Protocol.click(request.body, result_responder("play/hand"))
+      	RE.Play.Protocol.click(request.body, result_responder("play/hand"))
 			elseif request.kind == "play/move" then
 				RE.Play.Protocol.move(request.body, result_responder("play/hand"))
-            elseif request.kind == "play/play" then
-                RE.Play.Protocol.play(request.body, result_responder("play/play/result"))
+      elseif request.kind == "play/play" then
+      	RE.Play.Protocol.play(request.body, result_responder("play/play/result"))
 			elseif request.kind == "play/discard" then
 				RE.Play.Protocol.discard(request.body, result_responder("play/discard/result"))
-
+			-- In Shop
 			elseif request.kind == "shop/buymain" then
 				RE.Shop.Protocol.buy_main(request.body, result_responder("shop/info"))
 			elseif request.kind == "shop/buyuse" then
@@ -60,11 +65,10 @@ function Game:update(dt)
 				RE.Shop.Protocol.reroll(request.body, result_responder("shop/info"))
 			elseif request.kind == "shop/continue" then
 				RE.Shop.Protocol.continue(request.body, result_responder("blind_select/info"))
-        
+      -- In Round Overview
 			elseif request.kind == "overview/cash_out" then
 				RE.Overview.Protocol.cash_out(result_responder("shop/info"))
-				
-			-- hud actions structured as <context>/hud/<action>
+			-- Hud actions structured as <context>/hud/<action>
 			elseif string.match(request.kind, ".*/hud/.*") then
 				local context = string.match(request.kind, "^(.-)/hud/.*\z")
 				local action = string.match(request.kind, "^.*/hud/(.*)\z")
@@ -80,7 +84,7 @@ function Game:update(dt)
 				elseif action == "consumables/use" then
 					RE.Hud.Protocol.use_consumable(request.body, context, result_responder(context .. "/info"))
 				end
-			-- booster actions structured like <context>/open/<pack>/action
+			-- Booster actions structured as <context>/open/<pack>/<action>
 			elseif string.match(request.kind, ".*/open/.*/.*\z") then
 				local ret = string.match(request.kind, "^(.-)/open/.*\z")
 				local pack = string.match(request.kind, "^.*/open/(.-)/.*\z")

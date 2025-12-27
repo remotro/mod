@@ -3,7 +3,7 @@ RE.Screen.Protocol = {}
 
 function RE.Screen.Protocol.get(ok, err)
     RE.Util.await(function()
-        sendTraceMessage("state checks: " .. G.STATE)
+        sendTraceMessage("state checks: " .. G.STATE, "Remotro")
         if G.STATE == G.STATES.MENU then
             sendTraceMessage("MENU")
         elseif G.STATE == G.STATES.BLIND_SELECT then
@@ -66,6 +66,7 @@ function RE.Screen.await(states, cb)
             -- Check if current state matches any of the target states
             local found_state = nil
             for _, state in ipairs(states) do
+                sendTraceMessage("Checking current state " .. G.STATE .. " Against " .. state, "Remotro debug")
                 if G.STATE == state then
                     found_state = state
                     break

@@ -117,14 +117,15 @@ function RE.Play.Protocol.play(request, ok, err)
 
     G.FUNCS.play_cards_from_highlighted(nil)
 
-    RE.Screen.await({G.STATES.SELECTING_HAND, G.STATES.ROUND_EVAL, G.STATES.GAME_OVER}, function(new_state)
+    RE.Screen.await({G.STATES.SELECTING_HAND, G.STATES.ROUND_EVAL, G.STATES.NEW_ROUND --[[Needed because goes to new_round instead of game_over for some reason]]}, function(new_state)
         if new_state == G.STATES.SELECTING_HAND then
             ok({Again = RE.Play.info()})
         elseif new_state == G.STATES.ROUND_EVAL then
             RE.Overview.round(function(res)
                 ok({RoundOver = res})
             end)
-        elseif new_state == G.STATES.GAME_OVER then
+        else
+            sendWarnMessage("GAME OVER REACHED", "Remotro gameOver debugging")
             ok({GameOver = RE.Overview.game()})
         end
     end)
@@ -150,10 +151,11 @@ function RE.Play.Protocol.discard(request, ok, err)
 
     -- Can get away with not including a UI element here since its not used
     G.FUNCS.discard_cards_from_highlighted(nil)
-    RE.Screen.await({G.STATES.SELECTING_HAND, G.STATES.GAME_OVER}, function(new_state)
+    RE.Screen.await({G.STATES.SELECTING_HAND, G.STATES.NEW_ROUND}, function(new_state)
         if new_state == G.STATES.SELECTING_HAND then
             ok({Again = RE.Play.info()})
         elseif new_state == G.STATES.GAME_OVER then
+            sendWarnMessage("GAME OVER REACHED", "Remotro gameOver debugging")
             ok({GameOver = RE.Overview.game()})
         end
     end)

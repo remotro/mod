@@ -25,6 +25,7 @@ function RE.Client.request()
             local exclamationIndex = string.find(msg, "!")
             local kind = nil
             local body = nil
+            sendDebugMessage("Recieved " .. msg)
             if exclamationIndex then
                 kind = string.sub(msg, 1, exclamationIndex - 1)
                 body = string.sub(msg, exclamationIndex + 1)

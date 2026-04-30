@@ -33,8 +33,7 @@ function RE.Blinds.choice(id)
         return {
             chips = chips,
             state = blind_state,
-            tag = tag,
-            -- TODO: Expand blind tag data to include required fields for non-unit Tag variants (earnings, poker hand, etc.).
+            tag = tag
         }
     end
 end
@@ -46,8 +45,9 @@ function RE.Blinds.info()
             small = RE.Blinds.choice("Small"),
             big = RE.Blinds.choice("Big"),
             boss = RE.Blinds.choice("Boss"),
-        }
-    }
+        },
+        can_reroll_boss = false
+  }
 end
 
 local function get_blind_choice_widget()
@@ -114,4 +114,14 @@ function boss_blind_kind(blind_id)
 	else
 		return blind_id
 	end
+end
+
+function RE.Blinds.reroll_boss(ok, err)
+    if not (G.GAME.used_vouchers["v_retcon"] or (G.GAME.used_vouchers["v_directors_cut"] and not G.GAME.round_resets.boss_rerolled)) then
+        err("boss rerolling is not unlocked")
+    end
+    G.FUNCS.reroll_boss()
+    RE.Util.enqueue(function ()
+        ok(RE.Blinds.info())
+    end)
 end

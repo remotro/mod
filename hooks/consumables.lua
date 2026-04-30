@@ -40,7 +40,7 @@ function RE.Consumables.planet(card)
 	return { 
 		kind = { 
 			[card.config.center.key] = { 
-				current_level = G.GAME.hands[self.ability.consumeable.hand_type].level -- TODO: Drive this from the real planet progression; the placeholder still references 'self'.
+				current_level = G.GAME.hands[card.ability.consumeable.hand_type].level
 			} 
 		},
 		price = card.cost,
@@ -53,6 +53,9 @@ function RE.Consumables.spectral(card)
 	if card.edition then
 		edition = card.edition.key
 	end
-	-- TODO: Provide extra fields for spectral cards that require them (e.g. Ectoplasm hand size penalty).
-	return { kind = card.config.center.key, price = card.cost, negative = edition == "e_negative" }
+	local card_data = { kind = card.config.center.key, price = card.cost, negative = edition == "e_negative" }
+	if card_data.kind == "c_ectoplasm" then
+		card_data.hand_size_penalty = G.GAME.ecto_minus
+	end
+	return card_data
 end

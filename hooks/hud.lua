@@ -46,11 +46,7 @@ function RE.Hud.info()
     for voucher, _ in pairs(G.GAME.used_vouchers) do
         table.insert(vouchers_redeemed, voucher)
     end
-    local tags = {}
-    for _, tag in pairs(G.GAME.tags) do
-        table.insert(tags, tag.key)
-        -- TODO: Attach auxiliary data for tag variants that carry payloads (earnings, poker hand, etc.) once surfaced by the game.
-    end
+    local tags = RE.Tags.pending();
     return {
         hands = G.GAME.current_round.hands_left,
 		discards = G.GAME.current_round.discards_left,
@@ -61,7 +57,7 @@ function RE.Hud.info()
 		joker_slots = G.jokers.config.card_limit,
         consumables = consumables,
 		consumable_slots = G.consumeables.config.card_limit,
-        tags = tags,
+        tags = {},
 		deck = json_deck,
         run_info = {
             poker_hands = poker_hands,

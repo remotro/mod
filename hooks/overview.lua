@@ -8,9 +8,9 @@ local function translate_config(config)
     elseif string.find(config.name, "^tag") then
         kind = { Tag = config.tag }
     elseif string.find(config.name, "^blind") then
-        kind = { Blind = {} } -- TODO: Populate blind earnings with the list payload the API defines (currently returning an empty table).
+        kind = { Blind = {} } 
     elseif string.find(config.name, "^interest") then
-        kind = { Interest = {} } -- TODO: Populate interest earnings with the expected placeholder array once exposed.
+        kind = { Interest = {} }
     elseif string.find(config.name, "hands") then
         kind = { Hands = config.disp }
     elseif string.find(config.name, "discards") then
@@ -74,6 +74,13 @@ end
 function RE.Overview.game(cb)
 	return {
 		outcome = G.GAME.round_resets.ante <= G.GAME.win_ante and "Loss" or "Win",
+        best_hand = G.GAME.round_scores.hand.amt,
+        most_played_hand = G.GAME.current_round.most_played_poker_hand,
+        cards_played = G.GAME.round_scores.cards_played.amt,
+        cards_discarded = G.GAME.round_scores.cards_discarded.amt,
+        times_rerolled = G.GAME.round_scores.times_rerolled.amt,
+        cards_purchased = G.GAME.round_scores.cards_purchased.amt,
+        seed = G.GAME.pseudorandom.seed 
 		-- TODO: Fill out GameOverviewInfo (loss metadata, best hand, stats, seed) when proprietary data becomes accessible.
 	}
 end

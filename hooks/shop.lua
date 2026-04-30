@@ -47,7 +47,7 @@ function RE.Shop.info()
 		main = main_row,
 		vouchers = vouchers_row,
 		boosters = boosters_row,
-		-- TODO: Surface ShopInfo.reroll_cost from the proprietary state so the client can mirror reroll pricing.
+		reroll_cost = G.GAME.round_resets.temp_reroll_cost
 	}
 end
 

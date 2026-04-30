@@ -20,6 +20,7 @@ payload = '''
 self.GAME = saveTable and saveTable.GAME or self:init_game_object()
 self.RE = {}
 self.RE.earnings = {}
+self.RE.scored = {}
 self.RE.shop = false
 '''
 match_indent = true
@@ -122,4 +123,15 @@ payload = '''
     if (self.held_keys["lshift"] or self.held_keys["rshift"]) and (self.held_keys["lctrl"] or self.held_keys["rctrl"]) and key == "d" then
         G.FUNCS.remotro_reconnect()
     end
+'''
+
+[[patches]]
+[patches.pattern]
+target = 'engine/state_events.lua'
+match_indent = true
+pattern = "check_for_unlock({type = 'chip_score', chips = math.floor(hand_chips*mult)})"
+position = "after"
+payload = '''
+self.RE.scored.chips = hand_chips;
+self.RE.scored.mult = mult;
 '''

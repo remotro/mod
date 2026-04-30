@@ -53,7 +53,6 @@ function RE.Play.info()
 		current_blind = RE.Blinds.current(),
 		score = score,
         poker_hand = poker_hand,
-		-- TODO: Populate PlayInfo.last_score once the proprietary scoring summary is reachable.
 		hud = RE.Hud.info(),
 	}
 end
@@ -120,13 +119,13 @@ function RE.Play.Protocol.play(request, ok, err)
 
     RE.Screen.await({G.STATES.SELECTING_HAND, G.STATES.ROUND_EVAL, G.STATES.GAME_OVER}, function(new_state)
         if new_state == G.STATES.SELECTING_HAND then
-            ok({Again = RE.Play.info()})
+            ok({Again = { play = RE.Play.info(), scored = G.RE.scored }})
         elseif new_state == G.STATES.ROUND_EVAL then
             RE.Overview.round(function(res)
-                ok({RoundOver = res})
+                ok({RoundOver = { info = res, scored = G.RE.scored }})
             end)
         elseif new_state == G.STATES.GAME_OVER then
-            ok({GameOver = RE.Overview.game()})
+            ok({GameOver = { info = RE.Overview.game(), scored = G.RE.scored }})
         end
     end)
 end
